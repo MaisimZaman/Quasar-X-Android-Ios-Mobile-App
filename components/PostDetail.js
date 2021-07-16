@@ -10,7 +10,7 @@ import {
 import { ListItem } from "react-native-elements/dist/list/ListItem";
 
 import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon } from 'native-base'
-import { auth, db } from "../firebase";
+import { auth, db } from "../services/firebase";
 import firebase from 'firebase'
 
 
@@ -30,13 +30,8 @@ export default function PostDetail(props){
             .onSnapshot((snapshot) => setLikes(snapshot.docs.map(doc => ({
             id: doc.id,
             data: doc.data()
-            }))))
+        }))))
 
-    }, [inLikes])
-
-
-    useEffect(() => {
-    
         db.collection('postLikes').doc(id).collection('usersLiked')
             .where('userId', '==', auth.currentUser.uid)
             .get()
@@ -52,8 +47,10 @@ export default function PostDetail(props){
 
         
 
-        
     }, [inLikes])
+
+
+   
 
     function addLike(){
         db.collection('postLikes')
@@ -101,14 +98,20 @@ export default function PostDetail(props){
         <Card>
         <CardItem>
         <Left>
-            <TouchableOpacity onPress={() => props.navigation.navigate("Profile", {currentUser: PosterId})}>
+            <TouchableOpacity onPress={() => console.warn("pressed")}>
             <Thumbnail source={{uri: posterProfilePic}} />
             </TouchableOpacity>
             <Body>
                 <Text>{posterName} </Text>
                 <Text note>21</Text>
             </Body>
+
+            
         </Left>
+        <Right>
+            <Icon name="ios-chatbubbles-outline" style={{color: 'black '}}></Icon>
+            
+        </Right>
     </CardItem>
     <CardItem cardBody>
         <Image source={{uri: image}} style={{ height: 300, width: null, flex: 1 }} />

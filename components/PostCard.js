@@ -10,14 +10,14 @@ import {
 import { ListItem } from "react-native-elements/dist/list/ListItem";
 
 import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon } from 'native-base'
-import { auth, db } from "../firebase";
+import { auth, db } from "../services/firebase";
 import firebase from 'firebase'
 
 
 
 export default function PostCard(props){
 
-    const {id,posterName, PosterID, posterProfilePic, image, postDate, caption, likes, navigation} = props;
+    const {id,posterName, PosterId, posterProfilePic, image, postDate, caption, likes, navigation} = props;
 
     const [likesCount, setLikes] = useState([]);
     const [inLikes, setInLikes ] = useState([]);
@@ -100,7 +100,7 @@ export default function PostCard(props){
         <Card>
         <CardItem>
         <Left>
-            <TouchableOpacity onPress={() => console.warn("Yo")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Post-Detail", {currentUser: PosterId})}>
             <Thumbnail source={{uri: posterProfilePic}} />
             </TouchableOpacity>
             <Body>

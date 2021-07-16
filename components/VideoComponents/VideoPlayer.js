@@ -1,4 +1,5 @@
 import React from 'react'
+import { View, Text } from 'react-native'
 
 import { Video } from 'expo-av'
 
@@ -12,19 +13,21 @@ const Poster = styled.ImageBackground`
 `
 
 const VideoPlayer = ({ video, poster, isPlay }) => {
-	return isPlay ? (
+	return  isPlay ? (
 		<Play
 			rate={1.0}
-			volume={1.0}
+			volume={2.0}
 			isMuted={false}
 			shouldPlay
 			useNativeControls={false}
 			//posterSource={poster}
-			source={video}
+			source={{uri: video}}
 			resizeMode='cover'
 		/>
 	) : (
-		<Poster source={''} />
+		<View>
+			<Text>Loading</Text>
+		</View>
 	)
 }
 

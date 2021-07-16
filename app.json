@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "signal-chat",
-    "slug": "signal-chat",
+    "name": "Social-Media-App",
+    "slug": "social-media-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -27,6 +27,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "this is an App where u cam say facts without getting banned."
   }
 }

@@ -9,8 +9,7 @@ import { ListItem, Avatar } from 'react-native-elements'
 
 export default function ListImage({image}){
 
-    console.log("Under this is image")
-    console.log(image)
+    
 
 
     return (

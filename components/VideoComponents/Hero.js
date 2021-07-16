@@ -31,7 +31,9 @@ const Center = styled.View`
 	flex-direction: row;
 `
 
-const Hero = ({ videos }) => {
+const Hero = (props) => {
+
+	const { videos, navigation } = props;
 	const [selected, setSelected] = useState(0)
 
 	return (
@@ -43,7 +45,7 @@ const Hero = ({ videos }) => {
 				return (
 					<View key={index}>
 						<VideoPlayer
-							video={item.video}
+							video={item.data.downloadURL}
 							//poster={item.poster}
 							isPlay={selected === index}
 						/>
@@ -56,8 +58,8 @@ const Hero = ({ videos }) => {
 								'rgba(26,26,26,0.6)'
 							]}>
 							<Center>
-								<Info user={item.user} />
-								<Sidebar avatar={item.user.avatar} count={item.count} />
+								<Info user={item} />
+								<Sidebar avatar={item} count={item.count} />
 							</Center>
 						</Gradient>
 					</View>

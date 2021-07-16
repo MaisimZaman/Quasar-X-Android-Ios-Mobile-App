@@ -2,6 +2,8 @@ import React from 'react'
 
 import styled from 'styled-components/native'
 
+
+
 const Container = styled.View`
 	width: 60px;
 	height: 100%;
@@ -52,13 +54,13 @@ const Sidebar = ({ avatar, count }) => {
 		<Container>
 			<Menu>
 				<User>
-					<Avatar resizeMode='cover' source={avatar} />
+					<Avatar resizeMode='cover' source={{uri: avatar.data.profilePic}} />
 				</User>
 			</Menu>
 			
 			<Menu>
 				<Icon resizeMode='contain' source={require('../../services/assets/icons/like.png')} />
-				<Count>{count.like}</Count>
+				<Count>{"0"}</Count>
 			</Menu>
 
 			<Menu>
@@ -66,20 +68,22 @@ const Sidebar = ({ avatar, count }) => {
 					resizeMode='contain'
 					source={require('../../services/assets/icons/comment.png')}
 				/>
-				<Count>{count.comment}</Count>
+				<Count>{"0"}</Count>
 			</Menu>
 
 			<Menu>
 				<Icon resizeMode='contain' source={require('../../services/assets/icons/share.png')} />
-				<Count>{count.share}</Count>
+				<Count>{"0"}</Count>
 			</Menu>
 
 			<Menu>
 				<SoundBg>
-					<Sound resizeMode='cover' source={avatar} />
+					<Sound resizeMode='cover' source={{uri: avatar.data.profilePic}} />
 				</SoundBg>
 			</Menu>
 		</Container>
+
+		
 	)
 }
 

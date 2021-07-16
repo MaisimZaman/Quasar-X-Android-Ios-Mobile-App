@@ -7,6 +7,10 @@ import { Feather } from '@expo/vector-icons'
 import styled from 'styled-components/native'
 
 import { Button } from 'react-native-elements/dist/buttons/Button'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
+
+
 
 const Container = styled.View`
 	height: 59px;
@@ -44,8 +48,10 @@ const Tabs = ({navigation}) => {
 	return (
 		<Container>
 			<Menu>
+				<TouchableOpacity onPress={() => navigation.replace("Videos")}>
 				<Icon source={require('../../services/assets/icons/home.png')} />
 				<MenuText active='true'>Home</MenuText>
+				</TouchableOpacity>
 			</Menu>
 
 			<Menu>
@@ -53,25 +59,20 @@ const Tabs = ({navigation}) => {
 				<MenuText>Search</MenuText>
 			</Menu>
 
+			
+
 			<Menu>
-			<Border
-					start={{ x: 1, y: 0 }}
-					locations={[0, 0.5, 0.5, 1]}
-					colors={['#F42365', '#f42365', '#37d7cf', '#37d7cf']}>
-					<Button onPress={() => navigation.navigate("Add-Video")}>
-						<Feather name='plus' size={20} />
-					</Button>
-				</Border>
+				<TouchableOpacity onPress={() => navigation.navigate("Add-Video")}>
+					<Icon source={require('../../services/assets/icons/message.png')} />
+					<MenuText>Add</MenuText>
+				</TouchableOpacity>
 			</Menu>
 
 			<Menu>
-				<Icon source={require('../../services/assets/icons/message.png')} />
-				<MenuText>Add</MenuText>
-			</Menu>
-
-			<Menu>
+				<TouchableOpacity onPress={() => navigation.replace("My-Videos")}>
 				<Icon source={require('../../services/assets/icons/profile.png')} />
 				<MenuText>Stuff</MenuText>
+				</TouchableOpacity>
 			</Menu>
 		</Container>
 	)

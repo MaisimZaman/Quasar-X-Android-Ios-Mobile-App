@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body } from 'native-base'
-import { auth, db } from '../firebase'
+import { auth, db } from '../services/firebase'
 
 export default function Stories({userFollowing}) {
 
@@ -18,7 +18,6 @@ export default function Stories({userFollowing}) {
                 
                 db.collection("users").doc(data.userId).get().then((doc) => {
                     var userInfo = {id: doc.id, data: doc.data().photoURL}
-                    console.log(userInfo)
                     if (profiles.length < userFollowing.length){
     
                         setProfiles(profiles => [...profiles, userInfo])

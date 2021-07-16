@@ -43,13 +43,13 @@ const Info = ({ user }) => {
 	return (
 		<Container>
 			<User>
-				<UserName>@{user.username}</UserName>
+				<UserName>@{user.data.userName}</UserName>
 				<Checked source={require('../../services/assets/icons/checked.png')} />
 			</User>
-			<Description>{user.description}</Description>
+			<Description>{user.data.caption}</Description>
 			<Music>
 				<Feather name='music' size={13} />
-				{user.music}
+				{"Masks off"}
 			</Music>
 		</Container>
 	)
