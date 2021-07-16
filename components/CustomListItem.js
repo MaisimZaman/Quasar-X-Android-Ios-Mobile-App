@@ -7,9 +7,20 @@ export default function CustomListItem({ id, enterChat, photo, userName}){
 
     //const [chatMessages, setChatMessages] = useState([''])
 
+    const [lastMessage, setLastMessage] = useState('')
+
 
 
     useEffect(() => {
+        const unsubscribe = db.collection('chats')
+                .doc(id).collection('messages')
+                .orderBy('timestamp')
+                .onSnapshot((snapshot) => setLastMessage(snapshot.docs.map(doc => ({
+                                id: doc.id,
+                                data: doc.data()
+                }))))
+
+        return unsubscribe;
         
         
     }, [])
@@ -20,8 +31,23 @@ export default function CustomListItem({ id, enterChat, photo, userName}){
 
     function subTextLogic(){
         
-        
+        if (lastMessage.length == 0){
             return "No messages yet"
+
+        }
+        else {
+
+            if (lastMessage[lastMessage.length-1].data.email == auth.currentUser.email){
+                return "You:" + lastMessage[lastMessage.length-1].data.message
+
+            }
+            else {
+                return `${lastMessage[lastMessage.length-1].data.displayName}:` + lastMessage[lastMessage.length-1].data.message
+
+            }
+            
+        }
+        
 
     }
 
@@ -38,7 +64,7 @@ export default function CustomListItem({ id, enterChat, photo, userName}){
                 <ListItem.Title style={{fontWeight: "800"}}>
                     {userName}
                 </ListItem.Title>
-                <ListItem.Subtitle numberOfLines={1} ellipsizeMode="tail">
+                <ListItem.Subtitle  numberOfLines={1} ellipsizeMode="tail">
                     {subTextLogic()}
                 </ListItem.Subtitle>
             </ListItem.Content>

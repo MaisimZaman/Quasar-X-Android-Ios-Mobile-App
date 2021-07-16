@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } fro
 import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
 import CustomListItem from '../../components/CustomListItem'
 import { auth, db } from '../../services/firebase';
-import {AntDesign, SimpleLineIcons} from '@expo/vector-icons'
+import {SimpleLineIcons} from '@expo/vector-icons'
 
 
 export default function HomeScreen({ navigation }) {
@@ -17,8 +17,8 @@ export default function HomeScreen({ navigation }) {
     
 
     useEffect(() => {
-        async function unsubscribeDms(){ 
-            await db.collection('chats').onSnapshot(snapshot => {
+        function unsubscribeDms(){ 
+            db.collection('chats').onSnapshot(snapshot => {
             snapshot.docs.map(doc => {
                 if (doc.data().isDM == true){
                     if (doc.data().users[0] == auth.currentUser.uid){
@@ -86,9 +86,11 @@ export default function HomeScreen({ navigation }) {
 
 
         if (userInfo.length > 0){
-            var picInfo = userInfo.filter(function(value){
+            var picInfo = userInfo.filter((value) =>{
                 return value.uid == uid
             })[0].data.photoURL
+
+            
     
     
     
@@ -111,12 +113,12 @@ export default function HomeScreen({ navigation }) {
      
     
         if (userInfo.length > 0){
-            var nameInfo = userInfo.filter(function(value){
+            var nameInfo = userInfo.filter((value) =>{
                 return value.uid == uid
             })[0].data.displayName
 
 
-            console.log(nameInfo)
+            console.log("this is the display name" + nameInfo)
 
 
 

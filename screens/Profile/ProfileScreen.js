@@ -29,6 +29,7 @@ export default function Profile(props) {
     const [followingMatch, setFollowing] = useState([]);
     const [followingLength, setFollowingLength] = useState([]);
     const [needToMake, setNeedToMake] = useState(null);
+    const [followingCount, setFollowingCount] = useState(0);
     const navigation = props.navigation;
     const profile = props.route.params.currentUser;
     //const [profilePicture, setProfilePicture] = useState("") 
@@ -59,9 +60,20 @@ export default function Profile(props) {
                     data: doc.data()
         }))))
 
+        const unsubscribe3 = () => {
+            db.collection('following').onSnapshot(snapshot => snapshot.docs.map(doc => {
+                doc.collection("userFollowing").onSnapshot(snapshot2 => snapshot2.docs.map(doc2 => {
+                    if (doc2.data().userId == currentUser){
+                        setFollowingCount(followingCount + 1)
+                    }
+                }))
+            }))
+        }
+
         return () => {
             unsubscribe1()
             unsubscribe2()
+            unsubscribe3()
         }
 
 
@@ -206,7 +218,7 @@ export default function Profile(props) {
 
             firstClause.then((doc) => {
                 if (doc.exists){
-                    navigation.navigate("Chat", {id: doc.id, chatName: ''})
+                    navigation.navigate("Chat", {id: doc.id, chatName: profile.displayName, photo: profile.photoURL})
                     setNeedToMake(false)
 
                 }
@@ -228,7 +240,7 @@ export default function Profile(props) {
         
                 }).then(() => {
                     db.collection("chats").where("users", "==", [auth.currentUser.uid, currentUser]).get().then((doc) => {
-                        navigation.navigate("Chat", {id: doc.id, chatName: ''})
+                        navigation.navigate("Chat", {id: doc.id, chatName: profile.displayName, photo: profile.photoURL})
                         
                     })
                 }).catch(error => alert(error))
@@ -292,7 +304,7 @@ export default function Profile(props) {
                                         <Text style={{ fontSize: 10, color: 'grey' }}>Posts</Text>
                                     </View>
                                     <View style={{ alignItems: 'center' }}>
-                                        <Text>205</Text>
+                                        <Text>{followingCount}</Text>
                                         <Text style={{ fontSize: 10, color: 'grey' }}>Followers</Text>
                                     </View>
                                     <TouchableOpacity onPress={() => navigation.navigate("Following-Page", {
