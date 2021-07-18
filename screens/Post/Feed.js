@@ -36,10 +36,6 @@ export default function Feed({ navigation }) {
             }))))
             
 
-                
-            
-
-
             async function userLoop(item, index, arr){
                     await db.collection("users").doc(item.data.userId).get().then((doc) => {
                         setUserFollowing([...userFollowing, item])
@@ -50,17 +46,11 @@ export default function Feed({ navigation }) {
 
             }
 
-            
-
             async function executeLoop(array){
                 array.forEach(userLoop)
                 array.forEach(mainloop)
                 
             }
-
-                
-            
-
 
             async function mainloop(item, index, arr){
                 await db.collection('posts')
@@ -77,19 +67,12 @@ export default function Feed({ navigation }) {
                 })
 
             }
-
-            //userFollowing.forEach(mainloop)
-
         
             
         }
 
-    
         main()
-    
-
-        
-        
+            
     }, [])
 
 
@@ -100,10 +83,6 @@ export default function Feed({ navigation }) {
             var picInfo = userInfo.filter(function(value){
                 return value.uid == uid
             })[0].data.photoURL
-    
-    
-    
-            
          
             return picInfo
 
@@ -111,27 +90,17 @@ export default function Feed({ navigation }) {
         else {
             return 'null'
         }
-    
-        
-
-
     }
     
 
     function getDisplayName(uid){
-
-     
 
         if (userInfo.length > 0){
             var nameInfo = userInfo.filter(function(value){
                 return value.uid == uid
             })[0].data.displayName
 
-
-            console.log(nameInfo)
-
-
-
+            //console.log(nameInfo)
 
             return nameInfo
         }
@@ -141,10 +110,6 @@ export default function Feed({ navigation }) {
 
 
     }
-
-
-
- 
 
     function renderPosts(){
 
@@ -220,19 +185,16 @@ export default function Feed({ navigation }) {
         
     }
 
-    
-
-    
     return (
         <Container style={styles.container}>
             <Container>
-            <ScrollView>
+            <Content>
                 <Stories
                 userFollowing={userFollowing}
                 />
            
                 {renderPosts()}
-            </ScrollView>
+            </Content>
             </Container>
             
         </Container>

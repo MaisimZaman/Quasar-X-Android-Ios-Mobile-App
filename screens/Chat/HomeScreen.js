@@ -54,7 +54,7 @@ export default function HomeScreen({ navigation }) {
                     if (doc.data().isDM == false){
                         var allUsers  = doc.data().users
                         if (allUsers.includes(auth.currentUser.uid)){
-                            setChats(groupChats => [...groupChats, {id: doc.id, data: doc.data()}])
+                            setChats(chats => [...chats, {id: doc.id, data: doc.data()}])
 
                         }
                     }
@@ -82,9 +82,6 @@ export default function HomeScreen({ navigation }) {
         //return JSON.stringify(userInfo[0])
 
 
-
-
-
         if (userInfo.length > 0){
             var picInfo = userInfo.filter((value) =>{
                 return value.uid == uid
@@ -107,8 +104,6 @@ export default function HomeScreen({ navigation }) {
     function getDisplayName(uid){
 
         //return JSON.stringify(userInfo[0])
-
-    
 
      
     

@@ -39,11 +39,11 @@ export default function AddChat({ navigation }) {
     }
 
     function addChatMember(personInfo){
-        if (chatMembers.includes(personInfo.id) == false){
-            setChatMembers(chatMembers => [...chatMembers, personInfo.id])
+        if (chatMembers.includes(personInfo.uid) == false){
+            setChatMembers(chatMembers => [...chatMembers, personInfo.uid])
         }
         else {
-            setChatMembers(chatMembers => [...chatMembers].splice(personInfo.id))
+            setChatMembers(chatMembers => [...chatMembers].splice(personInfo.uid))
 
         }
     }

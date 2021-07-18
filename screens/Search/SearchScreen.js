@@ -91,6 +91,7 @@ export default function SearchScreen(props) {
                 <TouchableOpacity onPress={() => props.navigation.navigate("Post-Detail", {
                     id: id,
                     posterName: user.displayName,
+                    PosterId: user.uid,
                     posterProfilePic: user.photoURL,
                     image: data.downloadURL,
                     caption: data.caption

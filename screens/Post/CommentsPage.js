@@ -11,9 +11,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text } from 'react-native-elements';
 
 
+
 export default function CommentsPage(props) {
 
-    const {posterProfilePic, posterUserName, posterCaption, postId} = props.route.params;
+    const {posterProfilePic, posterUserName, posterCaption, postId, PosterId, image} = props.route.params;
 
     const [commentText, setCommentText] = useState('')
 
@@ -42,6 +43,26 @@ export default function CommentsPage(props) {
             comment: commentText,
             displayName: auth.currentUser.displayName,
             photoURL: auth.currentUser.photoURL,
+        })
+
+
+        
+        db.collection("notifications").doc(PosterId).set({null: "null"})
+
+        db.collection("notifications")
+        .doc(PosterId)
+        .collection("userNotifications")
+        .add({
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            commenterId: auth.currentUser.uid,
+            type: "comment",
+            caption: posterCaption,
+            postId: postId,
+            comment: commentText,
+            //image: image,
+            profilePicture: auth.currentUser.photoURL,
+            commenterName: auth.currentUser.displayName,
+
         })
 
      
@@ -82,7 +103,9 @@ export default function CommentsPage(props) {
             <Text h3>Comments: </Text>
             <ScrollView>
             
-            {renderComments()}
+                {renderComments()}
+
+            </ScrollView>
             
             <View style={styles.footer}>
             <TextInput 
@@ -109,7 +132,7 @@ export default function CommentsPage(props) {
 
             
 
-            </ScrollView>
+            
 
             
             </KeyboardAvoidingView>

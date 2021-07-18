@@ -125,6 +125,8 @@ export default function PostDetail(props){
                 posterUserName: posterName,
                 posterCaption: caption,
                 postId: id,
+                PosterId: PosterId,
+                image: image,
             })}>
                 <Icon name="ios-chatbubbles-outline" style={{ color: 'black' }} />
             </Button>

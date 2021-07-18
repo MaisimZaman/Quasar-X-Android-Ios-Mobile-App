@@ -100,7 +100,7 @@ export default function PostCard(props){
         <Card>
         <CardItem>
         <Left>
-            <TouchableOpacity onPress={() => navigation.navigate("Post-Detail", {currentUser: PosterId})}>
+            <TouchableOpacity onPress={() => navigation.navigate("Profile", {currentUser: PosterId})}>
             <Thumbnail source={{uri: posterProfilePic}} />
             </TouchableOpacity>
             <Body>
@@ -121,6 +121,7 @@ export default function PostCard(props){
                 posterUserName: posterName,
                 posterCaption: caption,
                 postId: id,
+                image: image,
             })}>
                 <Icon name="ios-chatbubbles-outline" style={{ color: 'black' }} />
             </Button>

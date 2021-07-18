@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -25,6 +25,7 @@ import StoryScreen from './screens/Profile/StoryScreen';
 import SaveVideo from './screens/Video/SaveVideo';
 import MyVideoScreen from './screens/Video/MyVideos';
 import RecVideo from './screens/Video/RecVideo';
+import NotificationScreen from './screens/Profile/NotificationScreen';
 import { Icon } from 'native-base';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
@@ -48,6 +49,13 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterScreen}></Stack.Screen>
         <Stack.Screen name="Main" component={MainScreen} options={({ navigation }) => ({
         title: "Quasar X",
+
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
+          <Image style={{ paddingLeft: 20, width: 30, height: 30 }} source={{uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIac9bECcFpTlEW5kz4WJy_sCTtLkY3fh2UH0urW5mCDpNpKD1YMxCIkgoclC2MwyI9Sk&usqp=CAU"}} />
+          </TouchableOpacity>
+
+        ),
   
         headerRight: () => ( 
         
@@ -102,6 +110,10 @@ export default function App() {
           ),
           headerTransparent: true,
       })}></Stack.Screen>
+      <Stack.Screen name="Notifications" component={NotificationScreen} options={({ navigation }) => ({
+          title: 'Your Notifications',
+         
+      })}/>
         
       </Stack.Navigator>
 
