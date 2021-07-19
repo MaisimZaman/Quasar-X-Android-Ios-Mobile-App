@@ -53,8 +53,9 @@ const Sound = styled.Image`
 const Sidebar = ({ avatar, count, navigation }) => {
 
 	const [numOfComments, setNumOfComments] = useState(0);
-	const [isLiked, setIsLiked] = useState(false)
+	const [isLiked, setIsLiked] = useState(null)
 	const [docId, setDocId] = useState('')
+	const [likesCount, setLikesCount] = useState(0)
 
 
 
@@ -75,20 +76,31 @@ const Sidebar = ({ avatar, count, navigation }) => {
 				
 			}
 
-			db.collection("videoLikes").doc(auth.currentUser.uid).get().then(doc => {
-				if (doc.exists){
-					setIsLiked(true)
-				}
-				else {
-					setIsLiked(false)
-				}
-			})
+			db.collection("videoLikes")
+				.doc(avatar.id)
+				.collection("usersLikes")
+				.get()
+				.then(snapshot => setLikesCount(snapshot.size))
 
-			if (isLiked){
-				db.collection("videoLikes").where("uid", "==", auth.currentUser.uid).get().then(doc => {
-					setDocId(doc.id)
+			db.collection("videoLikes")
+				.doc(avatar.id)
+				.collection("userLikes")
+				.where("userLiked", "==", auth.currentUser.uid)
+				.get()
+				.then(snapshot => {
+					if (snapshot.size > 0){
+						setIsLiked(true)
+						snapshot.forEach((doc) => {
+							setDocId(doc.id)
+						})
+					}
+					else {
+						setIsLiked(false)
+					}
 				})
-			}
+			
+
+			
 	
 
 		}
@@ -96,25 +108,48 @@ const Sidebar = ({ avatar, count, navigation }) => {
 
 		
 		
-		unsubscribe()
+		return unsubscribe
 	}, [])
+
 
 	function renderLikeButton(){
 
 		function likeVideo(){
 			db.collection("videoLikes")
-					.doc(avatar.id).collection("likers").add({
-						userId: auth.currentUser.uid,
-					})
-
-			setIsLiked(true)
+                .doc(avatar.id)
+				.collection("userLikes")
+                .add({
+                        userLiked: auth.currentUser.uid 
+                    })
+			setIsLiked(true);
+			
 		}
 
 		function unlikeVideo(){
-			db.collection("videoLikes")
-					.doc(avatar.id).collection("likers").doc(docId).delete()
 
+			db.collection("videoLikes")
+				.doc(avatar.id)
+				.collection("userLikes")
+				.where("userLiked", "==", auth.currentUser.uid)
+				.get()
+				.then(snapshot => {
+					snapshot.forEach((doc) => {
+						setDocId(doc.id)
+					})
+					
+			})
+			
+			db.collection("videoLikes")
+				.doc(auth.currentUser.uid)
+				.collection("userLikes")
+				.doc(docId)
+				.delete()
+
+			console.warn(docId)
 			setIsLiked(false)
+			
+
+			
 
 		}
 
@@ -124,7 +159,7 @@ const Sidebar = ({ avatar, count, navigation }) => {
 				<TouchableOpacity onPress={() => unlikeVideo()}>
 					<Menu>
 						<Icon resizeMode='contain' source={require('../../services/assets/icons/heart.png')} />
-						<Count>{"0"}</Count>
+						<Count>{likesCount}</Count>
 					</Menu>
 				</TouchableOpacity>
 			)
@@ -132,10 +167,10 @@ const Sidebar = ({ avatar, count, navigation }) => {
 		}
 		else {
 			return (
-				<TouchableOpacity onPress={() => likeVideo}>
+				<TouchableOpacity onPress={() => likeVideo()}>
 					<Menu>
 					<Icon resizeMode='contain' source={require('../../services/assets/icons/like.png')} />
-					<Count>{"0"}</Count>
+					<Count>{likesCount}</Count>
 					</Menu>
 				</TouchableOpacity>
 			)

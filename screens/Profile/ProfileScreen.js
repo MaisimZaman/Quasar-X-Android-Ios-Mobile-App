@@ -212,31 +212,45 @@ export default function Profile(props) {
 
         function createDms(){
 
-            var firstClause = db.collection("chats").where("users", "==", [auth.currentUser.uid, currentUser]).get()
-            var secondClause = db.collection("chats").where("users", "==", [currentUser, auth.currentUser.uid]).get()
+            var firstClause = db.collection("chats").where("users", "==", [auth.currentUser.uid, currentUser])
+            var secondClause = db.collection("chats").where("users", "==", [currentUser, auth.currentUser.uid])
             
             //var secondClause = db.collection("chats").where("users", "==", [currentUser, auth.currentUser.uid]).get()
 
-            firstClause.then((doc) => {
-                if (!doc.empty){
-                    console.log("this is doc" + JSON.stringify(doc.data()))
-                    navigation.navigate("Chat", {id: doc.id, chatName: profile.displayName, photo: profile.photoURL})
-                    setNeedToMake(false)
+            firstClause.get().then((snapshot) => {
 
+                if (snapshot.size > 0){
+
+                    snapshot.forEach((doc)=> {
+                        navigation.navigate("Chat", {id: doc.id, chatName: profile.displayName, photo: profile.photoURL})
+                        setNeedToMake(false)
+        
+                    
+
+                    })
                 }
+
+                
                 
             })
 
-            secondClause.then((doc) => {
-                if (!doc.empty){
-                    navigation.navigate("Chat", {id: doc.id, chatName: profile.displayName, photo: profile.photoURL})
-                    setNeedToMake(false)
+            secondClause.get().then((snapshot) => {
 
+                if (snapshot.size > 0){
+
+                    snapshot.forEach((doc)=> {
+                        navigation.navigate("Chat", {id: doc.id, chatName: profile.displayName, photo: profile.photoURL})
+                        setNeedToMake(false)
+        
+                    
+
+                    })
                 }
-
                 else {
                     setNeedToMake(true)
                 }
+
+                
                 
             })
 
@@ -250,8 +264,13 @@ export default function Profile(props) {
                     users: [auth.currentUser.uid, currentUser]
         
                 }).then(() => {
-                    db.collection("chats").where("users", "==", [auth.currentUser.uid, currentUser]).get().then((doc) => {
-                        navigation.navigate("Chat", {id: doc.id, chatName: profile.displayName, photo: profile.photoURL})
+                    db.collection("chats").where("users", "==", [auth.currentUser.uid, currentUser]).get().then((snap) => {
+                        snap.forEach((doc => {
+                            navigation.navigate("Chat", {id: doc.id, chatName: profile.displayName, photo: profile.photoURL})
+
+                        }))
+
+                        
                         
                     })
                 }).catch(error => alert(error))
