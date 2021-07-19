@@ -64,8 +64,8 @@ export default function SaveVideo(props) {
                 userName: auth.currentUser.displayName,
                 likesCount: 0,
                 creation: firebase.firestore.FieldValue.serverTimestamp()
-            }).then((function () {
-                props.navigation.goBack()
+            }).then((()  => {
+                props.navigation.replace("My-Videos")
             }))
     }
 

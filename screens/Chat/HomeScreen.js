@@ -187,7 +187,7 @@ export default function HomeScreen({ navigation }) {
            
             <ScrollView style={styles.container}>
                 {chats.map(({id, data, otherUser}) => (
-                    <CustomListItem key={id} id={id} enterChat={enterChat} photo={getphotoUrl(otherUser)} userName={getDisplayName(otherUser)}/>
+                    <CustomListItem key={id} id={id} enterChat={enterChat} photo={getphotoUrl(otherUser)} userName={getDisplayName(otherUser)} isDm={data.isDM}/>
                 ))}
             </ScrollView>
         </SafeAreaView>

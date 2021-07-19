@@ -1,5 +1,6 @@
-import React from 'react'
-
+import React, {useState, useEffect} from 'react'
+import { TouchableOpacity} from 'react-native'
+import { auth, db } from '../../services/firebase'
 import styled from 'styled-components/native'
 
 
@@ -49,7 +50,101 @@ const Sound = styled.Image`
 	border-radius: 25px;
 `
 
-const Sidebar = ({ avatar, count }) => {
+const Sidebar = ({ avatar, count, navigation }) => {
+
+	const [numOfComments, setNumOfComments] = useState(0);
+	const [isLiked, setIsLiked] = useState(false)
+	const [docId, setDocId] = useState('')
+
+
+
+	useEffect(() => {
+		
+		const unsubscribe = () => { 
+
+			try {
+				db.collection("videoComments")
+					.doc(avatar.id)
+					.collection("thisVideoComments")
+					.then(snap => {setNumOfComments(snap.size)})
+
+				}
+			
+			catch(error) {
+				setNumOfComments(0)
+				
+			}
+
+			db.collection("videoLikes").doc(auth.currentUser.uid).get().then(doc => {
+				if (doc.exists){
+					setIsLiked(true)
+				}
+				else {
+					setIsLiked(false)
+				}
+			})
+
+			if (isLiked){
+				db.collection("videoLikes").where("uid", "==", auth.currentUser.uid).get().then(doc => {
+					setDocId(doc.id)
+				})
+			}
+	
+
+		}
+			
+
+		
+		
+		unsubscribe()
+	}, [])
+
+	function renderLikeButton(){
+
+		function likeVideo(){
+			db.collection("videoLikes")
+					.doc(avatar.id).collection("likers").add({
+						userId: auth.currentUser.uid,
+					})
+
+			setIsLiked(true)
+		}
+
+		function unlikeVideo(){
+			db.collection("videoLikes")
+					.doc(avatar.id).collection("likers").doc(docId).delete()
+
+			setIsLiked(false)
+
+		}
+
+
+		if (isLiked){
+			return (
+				<TouchableOpacity onPress={() => unlikeVideo()}>
+					<Menu>
+						<Icon resizeMode='contain' source={require('../../services/assets/icons/heart.png')} />
+						<Count>{"0"}</Count>
+					</Menu>
+				</TouchableOpacity>
+			)
+
+		}
+		else {
+			return (
+				<TouchableOpacity onPress={() => likeVideo}>
+					<Menu>
+					<Icon resizeMode='contain' source={require('../../services/assets/icons/like.png')} />
+					<Count>{"0"}</Count>
+					</Menu>
+				</TouchableOpacity>
+			)
+		}
+		
+	}
+	
+	
+
 	return (
 		<Container>
 			<Menu>
@@ -58,17 +153,21 @@ const Sidebar = ({ avatar, count }) => {
 				</User>
 			</Menu>
 			
-			<Menu>
-				<Icon resizeMode='contain' source={require('../../services/assets/icons/like.png')} />
-				<Count>{"0"}</Count>
-			</Menu>
+			{renderLikeButton()}
 
 			<Menu>
-				<Icon
+				<TouchableOpacity onPress={() => navigation.navigate("Video-Comments", {
+					posterProfilePic: avatar.data.profilePic,
+					posterUserName: avatar.data.userName,
+					posterCaption: avatar.data.caption,
+					postId: avatar.id,
+				})}>
+					<Icon
 					resizeMode='contain'
 					source={require('../../services/assets/icons/comment.png')}
-				/>
-				<Count>{"0"}</Count>
+					/>
+					<Count>{`${numOfComments}`}</Count>
+				</TouchableOpacity>
 			</Menu>
 
 			<Menu>

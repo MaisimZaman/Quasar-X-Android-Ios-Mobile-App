@@ -26,6 +26,7 @@ import SaveVideo from './screens/Video/SaveVideo';
 import MyVideoScreen from './screens/Video/MyVideos';
 import RecVideo from './screens/Video/RecVideo';
 import NotificationScreen from './screens/Profile/NotificationScreen';
+import VideoComments from './components/VideoComponents/VideoComments';
 import { Icon } from 'native-base';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
@@ -52,7 +53,7 @@ export default function App() {
 
         headerLeft: () => (
           <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
-          <Image style={{ paddingLeft: 20, width: 30, height: 30 }} source={{uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIac9bECcFpTlEW5kz4WJy_sCTtLkY3fh2UH0urW5mCDpNpKD1YMxCIkgoclC2MwyI9Sk&usqp=CAU"}} />
+          <Image style={{ paddingLeft: 20, width: 25, height: 25 }} source={{uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcXrDYIdCrdQoXJZCETkOEUsuKoAo-DfJ14A&usqp=CAU"}} />
           </TouchableOpacity>
 
         ),
@@ -82,6 +83,7 @@ export default function App() {
         <Stack.Screen name="Update-Profile-Pic" component={UpdateProfilePic}></Stack.Screen>
         <Stack.Screen name="Post-Detail" component={PostDetail}></Stack.Screen>
         <Stack.Screen name="Comments" component={CommentsPage}></Stack.Screen>
+        <Stack.Screen name="Video-Comments" component={VideoComments}></Stack.Screen>
         <Stack.Screen name="Story-Screen" component={StoryScreen}></Stack.Screen>
         <Stack.Screen name="Videos" component={VideoScreen} options={({ navigation }) => ({
           title: 'Reels',

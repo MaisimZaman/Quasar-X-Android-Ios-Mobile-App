@@ -28,7 +28,7 @@ export default function Profile(props) {
     const [user, setUser] = useState("");
     const [followingMatch, setFollowing] = useState([]);
     const [followingLength, setFollowingLength] = useState([]);
-    const [needToMake, setNeedToMake] = useState(null);
+    const [needToMake, setNeedToMake] = useState(true);
     const [followingCount, setFollowingCount] = useState(0);
     const navigation = props.navigation;
     const profile = props.route.params.currentUser;
@@ -212,12 +212,23 @@ export default function Profile(props) {
 
         function createDms(){
 
-            var firstClause = db.collection("chats").where("users", "in", [[auth.currentUser.uid, currentUser], [currentUser, auth.currentUser.uid]]).get()
+            var firstClause = db.collection("chats").where("users", "==", [auth.currentUser.uid, currentUser]).get()
+            var secondClause = db.collection("chats").where("users", "==", [currentUser, auth.currentUser.uid]).get()
             
             //var secondClause = db.collection("chats").where("users", "==", [currentUser, auth.currentUser.uid]).get()
 
             firstClause.then((doc) => {
-                if (doc.exists){
+                if (!doc.empty){
+                    console.log("this is doc" + JSON.stringify(doc.data()))
+                    navigation.navigate("Chat", {id: doc.id, chatName: profile.displayName, photo: profile.photoURL})
+                    setNeedToMake(false)
+
+                }
+                
+            })
+
+            secondClause.then((doc) => {
+                if (!doc.empty){
                     navigation.navigate("Chat", {id: doc.id, chatName: profile.displayName, photo: profile.photoURL})
                     setNeedToMake(false)
 

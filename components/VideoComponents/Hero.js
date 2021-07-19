@@ -59,7 +59,7 @@ const Hero = (props) => {
 							]}>
 							<Center>
 								<Info user={item} />
-								<Sidebar avatar={item} count={item.count} />
+								<Sidebar avatar={item} count={item.count} navigation={navigation} />
 							</Center>
 						</Gradient>
 					</View>

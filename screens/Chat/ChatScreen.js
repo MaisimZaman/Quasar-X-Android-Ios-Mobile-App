@@ -108,6 +108,7 @@ export default function ChatScreen({ navigation, route}) {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white"}}>
             <StatusBar style="light"></StatusBar>
+        
             
             
             <KeyboardAvoidingView

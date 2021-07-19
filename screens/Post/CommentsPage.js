@@ -59,7 +59,7 @@ export default function CommentsPage(props) {
             caption: posterCaption,
             postId: postId,
             comment: commentText,
-            //image: image,
+            image: image,
             profilePicture: auth.currentUser.photoURL,
             commenterName: auth.currentUser.displayName,
 
@@ -100,6 +100,7 @@ export default function CommentsPage(props) {
                 </Body>
                 </Left>
             </CardItem>
+            <Text>{`${comments.length} total comments`}</Text>
             <Text h3>Comments: </Text>
             <ScrollView>
             

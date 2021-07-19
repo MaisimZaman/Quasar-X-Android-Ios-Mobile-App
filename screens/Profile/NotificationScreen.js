@@ -59,6 +59,39 @@ export default function NotificationScreen({navigation}) {
             )
 
         }
+
+        else if (item.data.type == "like"){
+            return (
+                <View>
+                    <TouchableOpacity
+                            onPress={() => navigation.navigate("Post-Detail", {
+                                id: item.data.postId,
+                                posterName: auth.currentUser.displayName,
+                                PosterId: auth.currentUser.uid,
+                                posterProfilePic: auth.currentUser.photoURL,
+                                image: item.data.image,
+                                caption: item.caption
+
+                            })}>
+                <CardItem>
+            <Left>
+                <Thumbnail source={{uri: item.data.profilePicture }} />
+    
+                <Body>
+                    <Text h5>{item.data.displayName + " has liked your post"} </Text>
+                 
+                </Body>
+            </Left>
+
+            <Right>
+                <Image style={{paddingRight: 10, height: 70, width: 70}} source={{uri: item.data.image}} />
+            </Right>
+            </CardItem>
+            </TouchableOpacity>
+            </View>
+            )
+
+        }
         
 
 
@@ -68,7 +101,7 @@ export default function NotificationScreen({navigation}) {
         return (
             <View>
                 <Text>You have no notifications yet</Text>
-                <Text>{JSON.stringify(notifications)}</Text>
+               
             </View>
         )
     }
