@@ -127,25 +127,15 @@ const Sidebar = ({ avatar, count, navigation }) => {
 
 		function unlikeVideo(){
 
+			
+			console.warn(docId)
 			db.collection("videoLikes")
 				.doc(avatar.id)
 				.collection("userLikes")
-				.where("userLiked", "==", auth.currentUser.uid)
-				.get()
-				.then(snapshot => {
-					snapshot.forEach((doc) => {
-						setDocId(doc.id)
-					})
-					
-			})
-			
-			db.collection("videoLikes")
-				.doc(auth.currentUser.uid)
-				.collection("userLikes")
-				.doc(docId)
+				.doc(docId.toString())
 				.delete()
 
-			console.warn(docId)
+			//console.warn(docId)
 			setIsLiked(false)
 			
 
@@ -201,7 +191,7 @@ const Sidebar = ({ avatar, count, navigation }) => {
 					resizeMode='contain'
 					source={require('../../services/assets/icons/comment.png')}
 					/>
-					<Count>{`${numOfComments}`}</Count>
+					<Count>{numOfComments}</Count>
 				</TouchableOpacity>
 			</Menu>
 

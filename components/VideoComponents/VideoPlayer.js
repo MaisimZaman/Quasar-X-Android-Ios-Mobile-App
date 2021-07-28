@@ -12,7 +12,7 @@ const Poster = styled.ImageBackground`
 	height: 100%;
 `
 
-const VideoPlayer = ({ video, poster, isPlay }) => {
+const VideoPlayer = ({ video, isPlay }) => {
 	return  isPlay ? (
 		<Play
 			rate={1.0}

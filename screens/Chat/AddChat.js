@@ -11,13 +11,13 @@ export default function AddChat({ navigation }) {
     const [input, setInput] = useState('');
     const [searchUsers, setSearchUsers] = useState('')
     const [users, setUsers] = useState([]);
-    const [chatMembers, setChatMembers] =  useState([]);
+    const [chatMembers, setChatMembers] =  useState([auth.currentUser.uid]);
 
 
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            title: "Add a new chat",
+            title: "Create a new Group chat",
             
         })
         
@@ -27,6 +27,7 @@ export default function AddChat({ navigation }) {
         await db.collection('chats').add({
             chatName: input,
             isDM: false,
+            admin: auth.currentUser.uid,
             chatMembers: chatMembers,
 
 
@@ -68,12 +69,22 @@ export default function AddChat({ navigation }) {
 
     function renderPerson(item){
 
+        function itemStyle(){
+            if (chatMembers.includes(item.uid)){
+                return {backgroundColor:'green'} 
+                
+            }
+            else {
+                return {backgroundColor:'white'}
+            }
+        }
+
                         
         return (
             <View>
 
             <TouchableOpacity onPress={() => addChatMember(item)}> 
-                <CardItem style={chatMembers.includes(item)? {backgroundColor:'green'} : {backgroundColor:'white'} }>
+                <CardItem style={itemStyle()}>
             <Left>
                 <Thumbnail source={{uri: item.photoURL}} />
 

@@ -14,7 +14,7 @@ import * as firebase from 'firebase'
 
 export default function ChatScreen({ navigation, route}) {
 
-    const {chatName, id, photo} = route.params
+    const {chatName, id, photo, isDm, members, admin} = route.params
 
     const [input, setInput] = useState("")
 
@@ -33,9 +33,11 @@ export default function ChatScreen({ navigation, route}) {
                     flexDirection: "row",
                     alignItems: "center",
                 }}>
-                    <Avatar rounded source={{
-                        uri: photo
-                    }}></Avatar>
+                    <TouchableOpacity onPress={clickChatInfo}>
+                        <Avatar rounded source={{
+                            uri: photo
+                        }}></Avatar>
+                    </TouchableOpacity>
                     <Text
                         style={{ color: "black", marginLeft: 10, fontWeight: "700"}}
                     >{chatName}</Text>
@@ -104,6 +106,18 @@ export default function ChatScreen({ navigation, route}) {
 
         return unsubscribe;
     }, [route])
+
+
+    function clickChatInfo(){
+        if (isDm){
+            navigation.navigate("Chat-Members", { navigation: navigation, membersList: members, isDms: true, chatName: '', chatId: id, admin: auth.currentUser.uid})
+        }
+
+        else {
+            navigation.navigate("Chat-Members", { navigation: navigation, membersList: members, isDms: false, chatName: chatName, chatId: id, admin: admin})
+
+        }
+    }
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white"}}>

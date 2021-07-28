@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "Social-Media-App",
-    "slug": "social-media-app",
+    "name": "QuasarX-Mobile",
+    "slug": "QuasarX-Mobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./services/assets/mainlogo.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./services/assets/background.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,17 +17,19 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "QuasarX.apk"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "foregroundImage": "./services/assets/mainlogo.png",
+        "backgroundColor": "#000000"
+      },
+      "package": "QuasarX.apk"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": "this is an App where u cam say facts without getting banned."
+    "description": "this is an App where you can say facts without getting banned."
   }
 }

@@ -75,6 +75,8 @@ export default function Feed({ navigation }) {
             
     }, [])
 
+    console.warn
+
 
     function getphotoUrl(uid){
 
@@ -85,6 +87,22 @@ export default function Feed({ navigation }) {
             })[0].data.photoURL
          
             return picInfo
+
+        }
+        else {
+            return 'null'
+        }
+    }
+
+    function getEmail(uid){
+
+        
+        if (userInfo.length > 0){
+            var emailInfo = userInfo.filter(function(value){
+                return value.uid == uid
+            })[0].data.email
+         
+            return emailInfo
 
         }
         else {
@@ -137,7 +155,6 @@ export default function Feed({ navigation }) {
             var qPosts = posts;
         }
 
-        console.log(page)
 
         
 
@@ -156,6 +173,8 @@ export default function Feed({ navigation }) {
                         postDate: "idk",
                         caption: item.data.caption,
                         likes: item.data.likesCount,
+                        navigation: navigation,
+                        email: getEmail(item.user)
                         
                     })}>
                     <PostCard
@@ -164,7 +183,9 @@ export default function Feed({ navigation }) {
                     id={item.id}
                     posterName={getDisplayName(item.user)}
                     posterProfilePic={getphotoUrl(item.user)}
+                    email={getEmail(item.user)}
                     PosterId={item.user}
+                    
                     image={item.data.downloadURL}
                     postDate={item.data.creation}
                     caption={item.data.caption}
@@ -175,9 +196,10 @@ export default function Feed({ navigation }) {
                     </TouchableOpacity>
 
                 )}
-                onMomentumScrollBegin={() => setScrollEnd(false)}
-                onMomentumScrollEnd={() => endReached()}
-                //onEndReached={endReached}
+                //onMomentumScrollBegin={() => setScrollEnd(false)}
+                //onMomentumScrollEnd={() => console.warn("end reached")}   
+                onEndReachedThreshold={0.5}           
+                onEndReached={() => setPage(page+5)}
             />
         )
     
@@ -186,18 +208,31 @@ export default function Feed({ navigation }) {
     }
 
     return (
-        <Container style={styles.container}>
-            <Container>
-            <Content>
-                <Stories
-                userFollowing={userFollowing}
-                />
-           
-                {renderPosts()}
-            </Content>
-            </Container>
+        
+        
+
             
-        </Container>
+        
+    
+            <Container style={styles.container}>
+
+                    <Content>
+                    <Stories
+                    userFollowing={userFollowing}
+                    />
+                    </Content>
+            
+                    
+            
+                    {renderPosts()}
+                
+                
+                
+            </Container>
+
+        
+
+        
     )
 }
 

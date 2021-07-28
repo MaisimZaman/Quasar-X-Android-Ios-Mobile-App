@@ -17,7 +17,7 @@ import firebase from 'firebase'
 
 export default function PostCard(props){
 
-    const {id,posterName, PosterId, posterProfilePic, image, postDate, caption, likes, navigation} = props;
+    const {id,posterName, PosterId, posterProfilePic, image, postDate, caption, likes, navigation, email} = props;
 
     const [likesCount, setLikes] = useState([]);
     const [inLikes, setInLikes ] = useState([]);
@@ -100,7 +100,12 @@ export default function PostCard(props){
         <Card>
         <CardItem>
         <Left>
-            <TouchableOpacity onPress={() => navigation.navigate("Profile", {currentUser: PosterId})}>
+            <TouchableOpacity onPress={() => () => navigation.navigate("Profile", {currentUser: {
+                displayName: posterName,
+                email: email,
+                photoURL: posterProfilePic,
+                uid: PosterId
+            }})}>
             <Thumbnail source={{uri: posterProfilePic}} />
             </TouchableOpacity>
             <Body>

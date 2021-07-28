@@ -157,6 +157,21 @@ export default function Profile(props) {
 
         })
 
+        db.collection("notifications").doc(currentUser).set({null: "null"})
+
+        db.collection("notifications")
+        .doc(currentUser)
+        .collection("userNotifications")
+        .add({
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            followerId: auth.currentUser.uid,
+            type: "follow",
+            profilePicture: auth.currentUser.photoURL,
+            followerName: auth.currentUser.displayName,
+            followerEmail: auth.currentUser.email,
+
+        })
+
 
     }
 
@@ -338,7 +353,8 @@ export default function Profile(props) {
                                         <Text style={{ fontSize: 10, color: 'grey' }}>Followers</Text>
                                     </View>
                                     <TouchableOpacity onPress={() => navigation.navigate("Following-Page", {
-                                        userId: currentUser
+                                        userId: currentUser,
+                                        userName: profile.displayName
                                     })}>
                                     <View style={{ alignItems: 'center' }}>
                                         <Text>{followingLength.length}</Text>

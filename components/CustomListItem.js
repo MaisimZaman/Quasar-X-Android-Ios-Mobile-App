@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { ListItem, Avatar } from 'react-native-elements'
 import { auth, db } from '../services/firebase'
 
-export default function CustomListItem({ id, enterChat, photo, userName}){
+export default function CustomListItem({ id, enterChat, photo, userName, isDM, members, admin }){
 
     //const [chatMessages, setChatMessages] = useState([''])
 
@@ -53,7 +53,7 @@ export default function CustomListItem({ id, enterChat, photo, userName}){
 
 
     return (
-        <ListItem key={id} onPress={() => enterChat(id, userName, photo)} key={id} bottomDivider>
+        <ListItem key={id} onPress={() => enterChat(id, userName, photo, isDM, members, admin)} key={id} bottomDivider>
             <Avatar 
                 rounded
                 source={{

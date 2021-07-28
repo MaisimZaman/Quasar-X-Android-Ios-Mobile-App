@@ -4,6 +4,7 @@ import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
 import CustomListItem from '../../components/CustomListItem'
 import { auth, db } from '../../services/firebase';
 import {SimpleLineIcons} from '@expo/vector-icons'
+import { Button } from 'react-native';
 
 
 export default function HomeScreen({ navigation }) {
@@ -11,6 +12,7 @@ export default function HomeScreen({ navigation }) {
     const [chats, setChats] = useState([]);
     const [userInfo, setUserInfo] = useState([])
     const [isDms, setIsDms] = useState(true);
+    const [userInfoLoaded, setUserInfoLoaded] = useState(false)
     
   
 
@@ -20,24 +22,19 @@ export default function HomeScreen({ navigation }) {
         function unsubscribeDms(){ 
             db.collection('chats').onSnapshot(snapshot => {
             snapshot.docs.map(doc => {
-                if (doc.data().isDM == true){
+                if (doc.data().isDM){
                     if (doc.data().users[0] == auth.currentUser.uid){
                         setChats(chats => [...chats, {id: doc.id, data: doc.data(), otherUser: doc.data().users[1]}])
-                        db.collection("users").doc(doc.data().users[1]).get().then((doc) => {
-                            setUserInfo(userInfo => [...userInfo, {uid: doc.id,  data: doc.data()}]
-                            )
-                            
-                        })
+
+                        
                         
                     }
 
                     else if (doc.data().users[1] == auth.currentUser.uid){
+                        
                         setChats(chats => [...chats, {id: doc.id, data: doc.data(), otherUser: doc.data().users[0]}])
-                        db.collection("users").doc(doc.data().users[0]).get().then((doc) => {
-                            setUserInfo(userInfo => [...userInfo, {uid: doc.id,  data: doc.data()}]
-                            )
-                            
-                        })
+
+                    
                     }
                 }
 
@@ -45,14 +42,25 @@ export default function HomeScreen({ navigation }) {
 
 
             
-        })}
+        })
 
+        db.collection('users')
+        .onSnapshot((snapshot) => setUserInfo(snapshot.docs.map(doc => ({
+            uid: doc.id,
+            data: doc.data()
+        }))))    
+        }
 
-        async function unsubscribeGcs(){
-            await db.collection('chats').onSnapshot(snapshot => {
-                snapshot.docs.forEach(doc => {
-                    if (doc.data().isDM == false){
-                        var allUsers  = doc.data().users
+        function unsubscribeGcs(){
+            
+            
+            db.collection('chats').onSnapshot(snapshot => {
+                snapshot.docs.map(doc => {
+                    if (!doc.data().isDM){
+                        
+                        var allUsers  = doc.data().chatMembers
+                        //console.warn(allUsers)
+                       
                         if (allUsers.includes(auth.currentUser.uid)){
                             setChats(chats => [...chats, {id: doc.id, data: doc.data()}])
 
@@ -69,19 +77,18 @@ export default function HomeScreen({ navigation }) {
 
         else {
             unsubscribeGcs()
+            
         }
 
         
 
         
 
-    }, [])
+    }, [isDms])
 
     function getphotoUrl(uid){
 
         //return JSON.stringify(userInfo[0])
-
-
         if (userInfo.length > 0){
             var picInfo = userInfo.filter((value) =>{
                 return value.uid == uid
@@ -89,10 +96,6 @@ export default function HomeScreen({ navigation }) {
 
             
     
-    
-    
-            
-         
             return picInfo
 
         }
@@ -101,12 +104,7 @@ export default function HomeScreen({ navigation }) {
         }
     }
 
-    function getDisplayName(uid){
-
-        //return JSON.stringify(userInfo[0])
-
-     
-    
+    function getDisplayName(uid){    
         if (userInfo.length > 0){
             var nameInfo = userInfo.filter((value) =>{
                 return value.uid == uid
@@ -173,23 +171,85 @@ export default function HomeScreen({ navigation }) {
         });
     }, [navigation])
 
-    function enterChat(id, chatName, photo){
+    function enterChat(id, chatName, photo, isDm, members, admin){
         navigation.navigate("Chat", {
             id: id,
             chatName: chatName,
-            photo: photo
+            photo: photo,
+            isDm: isDm,
+            members: members,
+            admin: admin
 
         })
     }
 
+    function switchChat(){
+        if (isDms){
+            setChats([])
+            setIsDms(false)
+        }
+        else {
+            setChats([])
+            setIsDms(true)
+        }
+
+    }
+
+    function chatTypeLogic(){
+        if (isDms){
+            return (
+                chats.map(({id, data, otherUser}) => (
+                    <CustomListItem key={id} 
+                    id={id} 
+                    enterChat={enterChat} 
+                    photo={getphotoUrl(otherUser)} 
+                    userName={getDisplayName(otherUser)} 
+                    isDM={true}
+                    members={[auth.currentUser.uid, otherUser]}
+                    admin={data.admin != undefined ? data.admin : ''}
+                    />
+                ))
+            )
+        }
+        else {
+            return (
+                chats.map(({id, data}) => (
+                
+                    <CustomListItem 
+                        id={id}
+                        enterChat={enterChat}
+                        photo={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4apNLOP0befEKu609F8yvMt_f-f7DVjNElhfMU2svKwmHjTCv7l-FNuor2rnCw33By5s&usqp=CAU"}
+                        userName={data.chatName}
+                        isDM={false}
+                        members={data.chatMembers}
+                    />
+                ))
+
+            )
+            
+
+        }
+    }
+
+    
+    function ButtonName(){
+        if (isDms){
+            return "Groups chats"
+        }
+        else {
+            return "Direct Messages"
+        }
+    }
+   
+
     return (
         <SafeAreaView>
-           
+            
+            <Button title={ButtonName()} onPress={switchChat}/>
             <ScrollView style={styles.container}>
-                {chats.map(({id, data, otherUser}) => (
-                    <CustomListItem key={id} id={id} enterChat={enterChat} photo={getphotoUrl(otherUser)} userName={getDisplayName(otherUser)} isDm={data.isDM}/>
-                ))}
+                {chatTypeLogic()}
             </ScrollView>
+            
         </SafeAreaView>
     )
 }

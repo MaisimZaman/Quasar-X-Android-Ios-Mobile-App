@@ -5,6 +5,9 @@ import {
     StyleSheet,
     Image,
     TouchableOpacity,
+    Alert,
+    Modal,
+    Pressable
 } from "react-native";
 
 import { ListItem } from "react-native-elements/dist/list/ListItem";
@@ -17,11 +20,12 @@ import firebase from 'firebase'
 
 export default function PostDetail(props){
 
-    const {id,posterName, PosterId, posterProfilePic, image, postDate, caption, likes} = props.route.params;
+    const {id,posterName, PosterId, posterProfilePic, image, postDate, caption, navigation, email} = props.route.params;
 
     const [likesCount, setLikes] = useState([]);
     const [inLikes, setInLikes ] = useState([]);
     const [removeLike, setRemoveLike ] = useState([])
+    const [modalVisible, setModalVisible] = useState(false);
 
 
     useEffect(() => {
@@ -92,65 +96,120 @@ export default function PostDetail(props){
         }
     }
 
-
-    return (
-        
-        <Card>
-        <CardItem>
-        <Left>
-            <TouchableOpacity onPress={() => console.warn("pressed")}>
-            <Thumbnail source={{uri: posterProfilePic}} />
-            </TouchableOpacity>
-            <Body>
-                <Text>{posterName} </Text>
-                <Text note>21</Text>
-            </Body>
-
-            
-        </Left>
-        <Right>
-            <Icon name="ios-chatbubbles-outline" style={{color: 'black '}}></Icon>
-            
-        </Right>
-    </CardItem>
-    <CardItem cardBody>
-        <Image source={{uri: image}} style={{ height: 300, width: null, flex: 1 }} />
-    </CardItem>
-    <CardItem style={{ height: 45 }}>
-        <Left>
-                {likesRender()}
-        
-            <Button transparent onPress={() => props.navigation.navigate("Comments", {
-                posterProfilePic: posterProfilePic,
-                posterUserName: posterName,
-                posterCaption: caption,
-                postId: id,
-                PosterId: PosterId,
-                image: image,
-            })}>
-                <Icon name="ios-chatbubbles-outline" style={{ color: 'black' }} />
-            </Button>
-            <Button transparent>
+    function loadDeleteButton(){
+        if (auth.currentUser.uid = PosterId){
+            return (
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
                 <Icon name="ios-send-outline" style={{ color: 'black' }} />
-            </Button>
+                </TouchableOpacity>
+            )
+        }
+    }
+
+    //navigation.navigate("Profile", {currentUser: PosterId})
+    return (
+        <View>
+            <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Would you like to delete this post? </Text>
+            <Pressable
+              style={[styles.button, styles.buttonDelete]}
+              onPress={() => {
+                  db.collection("posts")
+                  .doc(PosterId)
+                  .collection("userPosts")
+                  .doc(id)
+                  .delete()
+
+                  //navigation.navigate("Profile", {currentUser: auth.currentUser})
+                  navigation.goBack()
+              }}
+            >
+              <Text style={styles.textStyle}>Delete</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Cancel</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
 
 
-        </Left>
-    </CardItem>
+            <Card>
+            <CardItem>
+            <Left>
+                <TouchableOpacity onPress={() => navigation.navigate("Profile", {currentUser: {
+                    displayName: posterName,
+                    email: email,
+                    photoURL: posterProfilePic,
+                    uid: PosterId
+                }})}>
+                <Thumbnail source={{uri: posterProfilePic}} />
+                </TouchableOpacity>
+                <Body>
+                    <Text>{posterName} </Text>
+                    
+                </Body>
 
-    <CardItem style={{ height: 20 }}>
-        <Text>{likesCount.length}</Text>
-    </CardItem>
-    <CardItem>
-        <Body>
-            <Text>
-                <Text style={{ fontWeight: "900" }}>
+                
+            </Left>
+            <Right>
+                
+                {loadDeleteButton()}
+                
+            </Right>
+        </CardItem>
+        <CardItem cardBody>
+            <Image source={{uri: image}} style={{ height: 300, width: null, flex: 1 }} />
+        </CardItem>
+        <CardItem style={{ height: 45 }}>
+            <Left>
+                    {likesRender()}
+            
+                <Button transparent onPress={() => props.navigation.navigate("Comments", {
+                    posterProfilePic: posterProfilePic,
+                    posterUserName: posterName,
+                    posterCaption: caption,
+                    postId: id,
+                    PosterId: PosterId,
+                    image: image,
+                })}>
+                    <Icon name="ios-chatbubbles-outline" style={{ color: 'black' }} />
+                </Button>
+                <Button transparent>
+                    <Icon name="ios-send-outline" style={{ color: 'black' }} />
+                </Button>
+
+
+            </Left>
+        </CardItem>
+
+        <CardItem style={{ height: 20 }}>
+            <Text>{likesCount.length}</Text>
+        </CardItem>
+        <CardItem>
+            <Body>
+                <Text>
+                    <Text style={{ fontWeight: "900" }}>
+                    </Text>
+                    {caption}
                 </Text>
-                {caption}
-            </Text>
-        </Body>
-    </CardItem>
-</Card>
+            </Body>
+        </CardItem>
+        </Card>
+    </View>
          
 
     )
@@ -161,5 +220,49 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+      },
+      buttonOpen: {
+        backgroundColor: "#F194FF",
+      },
+      buttonClose: {
+        backgroundColor: "#2196F3",
+      },
+      buttonDelete: {
+        backgroundColor: "#FF0000",
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+      }
 });

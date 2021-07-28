@@ -40,9 +40,9 @@ export default function LoginScreen({ navigation }){
         <KeyboardAvoidingView behavior="padding" enabled style={styles.container}>
             <StatusBar style="light"></StatusBar>
             <Image
-                source={{
-                    uri: "https://miro.medium.com/max/1400/1*0MklwfO3QK0Ajl-7xsazwQ.jpeg"
-                }}
+                source={
+                    require("../../services/assets/mainlogo.png")
+                }
 
                 style={{width: 200, height: 200}}
             ></Image>

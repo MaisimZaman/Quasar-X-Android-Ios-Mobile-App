@@ -25,7 +25,7 @@ export default function NotificationScreen({navigation}) {
 
         
 
-        console.log(item)
+        //console.log(item)
 
         if (item.data.type == "comment"){
             return (
@@ -60,35 +60,31 @@ export default function NotificationScreen({navigation}) {
 
         }
 
-        else if (item.data.type == "like"){
+        else if (item.data.type == "follow"){
             return (
                 <View>
-                    <TouchableOpacity
-                            onPress={() => navigation.navigate("Post-Detail", {
-                                id: item.data.postId,
-                                posterName: auth.currentUser.displayName,
-                                PosterId: auth.currentUser.uid,
-                                posterProfilePic: auth.currentUser.photoURL,
-                                image: item.data.image,
-                                caption: item.caption
+                <TouchableOpacity
+                        onPress={() => navigation.navigate("Profile", {
+                            currentUser: {
+                                displayName: item.data.followerName,
+                                email: item.data.followerEmail,
+                                photoURL: item.data.profilePicture,
+                                uid: item.data.followerId
+                            }
+                            
+                        })}>
+            <CardItem>
+        <Left>
+            <Thumbnail source={{uri: item.data.profilePicture }} />
 
-                            })}>
-                <CardItem>
-            <Left>
-                <Thumbnail source={{uri: item.data.profilePicture }} />
-    
-                <Body>
-                    <Text h5>{item.data.displayName + " has liked your post"} </Text>
-                 
-                </Body>
-            </Left>
+            <Body>
+                <Text h5>{item.data.followerName} has followed you</Text>
+            </Body>
+        </Left>
+        </CardItem>
+        </TouchableOpacity>
+        </View>
 
-            <Right>
-                <Image style={{paddingRight: 10, height: 70, width: 70}} source={{uri: item.data.image}} />
-            </Right>
-            </CardItem>
-            </TouchableOpacity>
-            </View>
             )
 
         }

@@ -12,26 +12,17 @@ import { auth, db } from '../../services/firebase'
 //import BottomSheet from 'reanimated-bottom-sheet';
 import VideoComments from '../../components/VideoComponents/VideoComments'
 import { Button } from 'react-native'
-
-
+import VideoPlayer from '../../components/VideoComponents/VideoPlayer'
 
 
 const Container = styled.View`
 	flex: 1;
 	background: transparent;
-
-
-
-
 `
-
 
 export default function VideoScreen({ navigation }){
 
 	const [allVideos, setAllVideos] = useState([]);
-
-
-    
 
     const postsFor = auth.currentUser.uid;
 
@@ -39,10 +30,7 @@ export default function VideoScreen({ navigation }){
 
     useEffect(() => {    
 
-
         async function main(){
-
-        
             await db.collection('following')
                     .doc(postsFor).collection('userFollowing')
                     .orderBy('timestamp', 'desc')
@@ -51,18 +39,11 @@ export default function VideoScreen({ navigation }){
                     data: doc.data()
 
             }))))
-            
-
-                
-            
+                        
             async function executeLoop(array){
                 array.forEach(mainloop)
                 
             }
-
-                
-            
-
 
             async function mainloop(item, index, arr){
                 await db.collection('videos')
@@ -79,16 +60,14 @@ export default function VideoScreen({ navigation }){
                 })
 
             }
-
             //userFollowing.forEach(mainloop)
-
-        
-            
         }
 
         main()
         
     }, [])
+
+    console.warn(allVideos.length)
 
     function renderBottomSheetContent(){
         return (
@@ -100,6 +79,8 @@ export default function VideoScreen({ navigation }){
     function openBottomSheet(){
         sheetRef.current.snapTo(0);
     }
+
+    //const Container = 2;
 
 
 	return (
@@ -113,6 +94,9 @@ export default function VideoScreen({ navigation }){
 				<Header />
              
 				<Hero videos={allVideos} navigation={navigation}/>
+
+                
+                
 				<Tabs navigation={navigation} />
 			</Container>
 
