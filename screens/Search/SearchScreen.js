@@ -47,10 +47,13 @@ export default function SearchScreen(props) {
                 }
 
                 function exectuueOrder(arr){
-                    if (allPosts.length < 16){
+                    if (allPosts < 16){
                         arr.forEach(addPostToState)
 
                     }
+                        
+
+            
                     
 
                 }
@@ -208,15 +211,15 @@ export default function SearchScreen(props) {
     return (
 
         <Container>
-        <ScrollView>
-            <KeyboardAvoidingView>
-                <TextInput
+            <TextInput
                     style={styles.textInput}
                     placeholder="Seach for User..."
                     onChangeText={(search) => setSearch(search)} />
+        <ScrollView>
+                
 
                 {renderMain()}
-            </KeyboardAvoidingView>
+            
         </ScrollView>
         </Container>
     )

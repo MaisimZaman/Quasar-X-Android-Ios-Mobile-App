@@ -149,7 +149,7 @@ export default function Feed({ navigation }) {
         
         else if (posts.length > 5) {
 
-            var qPosts = posts.slice(0, page)
+            var qPosts = posts.slice(page - 5, page)
         }
         else {
             var qPosts = posts;
@@ -199,6 +199,7 @@ export default function Feed({ navigation }) {
                 //onMomentumScrollBegin={() => setScrollEnd(false)}
                 //onMomentumScrollEnd={() => console.warn("end reached")}   
                 onEndReachedThreshold={0.5}           
+                onScrollToTop={() => setPage(page - 5)}
                 onEndReached={() => setPage(page+5)}
             />
         )

@@ -81,7 +81,8 @@ export default function AddChat({ navigation }) {
 
                         
         return (
-            <View>
+    
+    <View>
 
             <TouchableOpacity onPress={() => addChatMember(item)}> 
                 <CardItem style={itemStyle()}>
