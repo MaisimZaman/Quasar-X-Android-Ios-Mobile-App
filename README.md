@@ -4,9 +4,9 @@
 
 
 Technolagies used: 
-  -React Native for hybrid mobile app development framework for the UI, navigation and interface 
-  -Expo CLI used for development/testing, expo libaries and expo Android and IOS app builder for production
-  -firebase backend real time database holding all the client posted  and server data, authentication system and data/document organization
+  - React Native for hybrid mobile app development framework for the UI, navigation and interface 
+  - Expo CLI used for development/testing, expo libaries and expo Android and IOS app builder for production
+  - firebase backend real time database holding all the client posted  and server data, authentication system and data/document organization
   
   
   
