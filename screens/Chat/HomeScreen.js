@@ -206,7 +206,7 @@ export default function HomeScreen({ navigation }) {
                     userName={getDisplayName(otherUser)} 
                     isDM={true}
                     members={[auth.currentUser.uid, otherUser]}
-                    admin={data.admin != undefined ? data.admin : ''}
+                    admin={auth.currentUser.uid}
                     />
                 ))
             )
@@ -222,6 +222,7 @@ export default function HomeScreen({ navigation }) {
                         userName={data.chatName}
                         isDM={false}
                         members={data.chatMembers}
+                        admin={data.admin}
                     />
                 ))
 

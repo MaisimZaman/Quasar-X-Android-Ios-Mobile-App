@@ -10,11 +10,11 @@ import { Image } from 'react-native-elements'
 
 export default function EditProfile({ navigation }){
 
-    const [name, setName] = useState('');
+    const [name, setName] = useState(auth.currentUser.displayName);
     
     const [password, setPassword] = useState('');
 
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(auth.currentUser.email);
 
     const [biography, setBiography] = useState('');
 

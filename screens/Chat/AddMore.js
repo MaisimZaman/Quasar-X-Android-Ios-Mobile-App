@@ -6,38 +6,36 @@ import { auth, db } from '../../services/firebase';
 import { CardItem, Thumbnail, Body, Left, Right, Container} from 'native-base'
 
 
-export default function AddChat({ navigation }) {
+export default function AddMore(props) {
 
-    const [input, setInput] = useState('');
+    const navigation = props.navigation
+
+    const {addedUsers, chatName, chatId} = props.route.params
+
     const [searchUsers, setSearchUsers] = useState('')
     const [users, setUsers] = useState([]);
-    const [chatMembers, setChatMembers] =  useState([auth.currentUser.uid]);
+    const [chatMembers, setChatMembers] =  useState(addedUsers);
 
 
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            title: "Create a new Group chat",
+            title: "Add More friends to "  + chatName,
             
         })
         
     }, [navigation])
 
-    async function createChat(){
-        await db.collection('chats').add({
-            chatName: input,
-            isDM: false,
-            admin: auth.currentUser.uid,
-            chatMembers: chatMembers,
+    function updateChatMembers(){
+        db.collection("chats")
+            .doc(chatId)
+            .update({
+                chatMembers: chatMembers
+            })
 
-
-        }).then(() => {
-            navigation.goBack()
-        }).catch(error => alert(error))
-
-        
-        
+        navigation.goBack()
     }
+
 
     function addChatMember(personInfo){
         if (chatMembers.includes(personInfo.uid) == false){
@@ -118,18 +116,9 @@ export default function AddChat({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Input 
-                placeholder='Enter a chat name'
-                value={input}
-                onChangeText={(text) => setInput(text)}
-                onSubmitEditing={createChat}
-                leftIcon={
-                    <Icon name="wechat" type="antdesign" size={24} color="black"/>
-                }
+            
 
-            />
-
-            <Button disabled={input==''} title="Create New Chat" onPress={createChat}></Button>
+            <Button  title="Add More Users" onPress={updateChatMembers}></Button>
 
             <TextInput
                     style={styles.textInput}

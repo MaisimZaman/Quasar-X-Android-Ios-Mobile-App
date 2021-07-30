@@ -55,8 +55,10 @@ const Tabs = ({navigation}) => {
 			</Menu>
 
 			<Menu>
-				<Icon source={require('../../services/assets/icons/discover.png')} />
-				<MenuText>Search</MenuText>
+				<TouchableOpacity  onPress={() => navigation.replace("Explore-Videos")}>
+					<Icon source={require('../../services/assets/icons/discover.png')} />
+					<MenuText>Search</MenuText>
+				</TouchableOpacity>
 			</Menu>
 
 			

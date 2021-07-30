@@ -28,6 +28,8 @@ import RecVideo from './screens/Video/RecVideo';
 import NotificationScreen from './screens/Profile/NotificationScreen';
 import VideoComments from './components/VideoComponents/VideoComments';
 import chatMembers from './screens/Chat/ChatMembers';
+import AddMore from './screens/Chat/AddMore';
+import VideoExplore from './screens/Video/VideoExplore';
 import { Icon } from 'native-base';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
@@ -100,12 +102,24 @@ export default function App() {
       })}></Stack.Screen>
         <Stack.Screen name="Add-Video" component={AddVideo}></Stack.Screen>
         <Stack.Screen name="Save-Video" component={SaveVideo}></Stack.Screen>
+        <Stack.Screen name="Add-More" component={AddMore}></Stack.Screen>
         <Stack.Screen name="Record-Video" component={RecVideo} options={({ navigation }) => ({
           title: 'Record',
 
       })}></Stack.Screen>
         <Stack.Screen name="My-Videos" component={MyVideoScreen} options={({ navigation }) => ({
           title: 'Your Reels',
+          headerTintColor: '#ffffff',
+          headerRight: () => (
+          <TouchableOpacity onPress={() => navigation.navigate("Add-Video")}>
+            <Icon name="ios-camera-outline" style={{ paddingLeft: 10 }} />
+          </TouchableOpacity> 
+          ),
+          headerTransparent: true,
+      })}></Stack.Screen>
+
+    <Stack.Screen name="Explore-Videos" component={VideoExplore} options={({ navigation }) => ({
+          title: 'Explore Reels',
           headerTintColor: '#ffffff',
           headerRight: () => (
           <TouchableOpacity onPress={() => navigation.navigate("Add-Video")}>

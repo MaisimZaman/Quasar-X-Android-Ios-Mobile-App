@@ -11,7 +11,7 @@ import * as firebase from 'firebase';
 
 export default function chatMembers(props) {
 
-    const {navigation, membersList, isDms, chatName, chatId, admin} = props.route.params;
+    const {navigation, membersList, isDms, chatName, chatId} = props.route.params;
 
  
 
@@ -30,7 +30,7 @@ export default function chatMembers(props) {
         return unsubscribe
     }, [])
 
-
+    
     function getUserData(uid){
         if (userData.length > 0){
             var Info = userData.filter(function(value){
@@ -51,11 +51,9 @@ export default function chatMembers(props) {
 
     function renderPerson(userid, point){
         
-        //var item = userData[point]
 
         const thisInfo = getUserData(userid)
-
-        //{thisInfo.displayName} {admin === thisInfo.uid ? '(Admin)' : ''}
+    
 
         return (
             <View>
@@ -69,7 +67,7 @@ export default function chatMembers(props) {
 
             <Body>
                 
-                <Text h4>{thisInfo.displayName} {admin === thisInfo.uid ? '(Admin)' : ''}</Text>
+                <Text h4>{thisInfo.displayName}</Text>
                 <Text>{thisInfo.email}</Text>
             </Body>
         </Left>
@@ -95,7 +93,11 @@ export default function chatMembers(props) {
     function renderAddMorePeople(){
         if (!isDms){
             return (
-                <Icon name="wechat" type="antdesign" size={24} color="black"/>
+                <Button title="Add more friends? " onPress={() => navigation.navigate("Add-More", {
+                    addedUsers: membersList,
+                    chatName: chatName,
+                    chatId: chatId
+                })}></Button>
 
             )
         }
@@ -145,19 +147,26 @@ export default function chatMembers(props) {
         }
     }
 
-    function renderDeleteButton(){
-        function deleteChat(){
-            db.collection("chats")
-                .doc(chatId)
-                .delete()
+    function renderLeaveButton(){
+        function deleteUser(){
 
+            //const UpdatedList = membersList.splice(membersList.indexOf(auth.currentUser.uid))
+            db.collection("chats")
+                    .doc(chatId)
+                    .update({
+                        chatMembers: membersList.splice(membersList.indexOf(auth.currentUser.uid))
+                    })
             navigation.replace("Home")
+
+            
+
+            
         }
 
 
-        if (auth.currentUser.uid == admin){
+        if (!isDms){
             return (
-                <Button title="Delete chat" onPress={deleteChat}></Button>
+                <Button title="Leave Chat" onPress={deleteUser}></Button>
             )
         }
     }
@@ -166,12 +175,14 @@ export default function chatMembers(props) {
     return (
         <View>
             {editChatName()}
+            {renderAddMorePeople()}
             <ScrollView>
                 <Text h3>{isDms ? 'Direct Messages with' : 'Group Members'}</Text>
                 {rendermembers()}
                 
             </ScrollView>
-            {renderDeleteButton()}
+            {renderLeaveButton()}
+            
         </View>
     )
 }

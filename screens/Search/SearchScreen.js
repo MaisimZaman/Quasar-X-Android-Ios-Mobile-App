@@ -12,7 +12,7 @@ export default function SearchScreen(props) {
     const [usersList, setUsers] = useState([])
     const [search, setSearch] = useState('')
     const [allPosts, setAllposts] = useState([])
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(15);
     
 
     
@@ -51,11 +51,7 @@ export default function SearchScreen(props) {
                         arr.forEach(addPostToState)
 
                     }
-                        
-
-            
-                    
-
+        
                 }
 
                 
@@ -187,9 +183,17 @@ export default function SearchScreen(props) {
         }
 
         function endReached(){
-            setPage(page +1)
+            setPage(page +6)
 
         }
+
+        if (usersList.length < 15){
+            var paginatedList = usersList
+        }
+        else {
+            var paginatedList = usersList.slice(0, page)
+        }
+
         return (
 
             <FlatList
@@ -200,7 +204,7 @@ export default function SearchScreen(props) {
                    renderPerson(item)
 
                 )}
-                //onEndReached={endReached}
+                onEndReached={endReached}
             />
         )
     }
@@ -211,16 +215,16 @@ export default function SearchScreen(props) {
     return (
 
         <Container>
-            <TextInput
+            <ScrollView>
+                <TextInput
                     style={styles.textInput}
                     placeholder="Seach for User..."
                     onChangeText={(search) => setSearch(search)} />
-        <ScrollView>
-                
 
                 {renderMain()}
+
+            </ScrollView>
             
-        </ScrollView>
         </Container>
     )
 }
