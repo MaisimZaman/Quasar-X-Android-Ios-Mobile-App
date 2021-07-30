@@ -17,7 +17,8 @@ Features:
   - Feed algorthim based on the users you follow 
   - Profile system and Profile editing 
   - Users searching
-  - Explore page 
+  - Post Explore page
+  - Video Explore page 
   - Video Reels posting and watching 
   - Video reels liking, commenting and sharing 
   - Built in Video reccording 
