@@ -9,10 +9,6 @@ import Hero from '../../components/VideoComponents/Hero'
 import Tabs from '../../components/VideoComponents/Tabs'
 import { auth, db } from '../../services/firebase'
 
-//import BottomSheet from 'reanimated-bottom-sheet';
-import VideoComments from '../../components/VideoComponents/VideoComments'
-import { Button } from 'react-native'
-import VideoPlayer from '../../components/VideoComponents/VideoPlayer'
 
 
 const Container = styled.View`
@@ -34,9 +30,8 @@ export default function VideoExplore({ navigation }){
                 await db.collection("videos")
                 .doc(item.userId)
                 .collection("userVideos")
-                .orderBy('timestamp', 'desc')
                 .onSnapshot((snapshot) => {
-                    setAllVideos(allPosts => [...allPosts].concat(
+                    setAllVideos(allVideos => [...allVideos].concat(
                         snapshot.docs.map(doc => ({
                             id: doc.id,
                             user: item.userInfo,
@@ -52,7 +47,7 @@ export default function VideoExplore({ navigation }){
             }
 
             function exectuueOrder(arr){
-                if (allPosts < 16){
+                if (allVideos < 16){
                     arr.forEach(addPostToState)
 
                 }
@@ -79,14 +74,6 @@ export default function VideoExplore({ navigation }){
     
 
     }, [])
-
-
-   
-
-    //console.warn(allVideos.length)
-
-    
-    //const Container = 2;
 
 
 	return (
