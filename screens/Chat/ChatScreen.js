@@ -178,6 +178,7 @@ export default function ChatScreen({ navigation, route}) {
                         ></TextInput>
 
                         <TouchableOpacity 
+                        disabled={input == ""}
                         onPress={sendMessage}
                         >
                             <Ionicons name="send" size={24}  color="#2b68E6"></Ionicons>

@@ -87,8 +87,8 @@ export default function VideoScreen({ navigation }){
 		<>
 			<StatusBar
 				translucent
-				backgroundColor='transparent'
-				barStyle='light-content'
+				//backgroundColor='transparent'
+				//barStyle='light-content'
 			/>
 			<Container>
 				<Header />

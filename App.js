@@ -49,7 +49,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={globalScreenOptions}>
         
-        <Stack.Screen name="Login" component={LoginScreen} sc></Stack.Screen>
+        <Stack.Screen name="Login" component={LoginScreen} ></Stack.Screen>
         <Stack.Screen name="Register" component={RegisterScreen}></Stack.Screen>
         <Stack.Screen name="Main" component={MainScreen} options={({ navigation }) => ({
         title: "Quasar X",

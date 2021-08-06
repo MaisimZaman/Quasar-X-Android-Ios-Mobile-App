@@ -86,8 +86,7 @@ export default function EditProfile({ navigation }){
 
             </View>
 
-            <Text h4 style={{height: 30}}>Name: {auth.currentUser.displayName}</Text>
-            <Text h4 style={{height: 60}}>Email: {auth.currentUser.email}</Text>
+         
 
             <View style={styles.inputContainer}>
                 <Input 

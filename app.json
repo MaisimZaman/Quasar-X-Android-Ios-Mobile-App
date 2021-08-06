@@ -25,7 +25,7 @@
         "foregroundImage": "./services/assets/mainlogo.png",
         "backgroundColor": "#000000"
       },
-      "package": "QuasarX.apk"
+      "package": "quasarX.apk"
     },
     "web": {
       "favicon": "./assets/favicon.png"
