@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "QuasarX-Mobile",
-    "slug": "QuasarX-Mobile",
+    "name": "quasarX-mobile",
+    "slug": "quasarX-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./services/assets/mainlogo.png",
@@ -18,7 +18,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "QuasarX.apk"
+      "bundleIdentifier": "quasarX.apk"
     },
     "android": {
       "adaptiveIcon": {

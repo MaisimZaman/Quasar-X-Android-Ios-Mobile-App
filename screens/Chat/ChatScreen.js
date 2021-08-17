@@ -1,5 +1,5 @@
 import React, {useLayoutEffect, useState} from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Image } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons'
 import { SafeAreaView } from 'react-native'
@@ -10,6 +10,8 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import { Keyboard } from 'react-native'
 import { auth, db } from '../../services/firebase'
 import * as firebase from 'firebase'
+import * as ImagePicker from 'expo-image-picker';
+
 
 
 export default function ChatScreen({ navigation, route}) {
@@ -19,6 +21,10 @@ export default function ChatScreen({ navigation, route}) {
     const [input, setInput] = useState("")
 
     const [messages, setMessages] = useState([])
+
+    const [image, setImage] = useState('')
+
+    const [imagePath, setImagePath] = useState('')
 
     
 
@@ -76,6 +82,76 @@ export default function ChatScreen({ navigation, route}) {
 
     }, [navigation, messages])
 
+
+    async function sendPictureImage(){
+            let result = await ImagePicker.launchImageLibraryAsync({
+              mediaTypes: ImagePicker.MediaTypeOptions.Images,
+              
+            });
+            console.log(result);
+        
+            if (!result.cancelled) {
+              setImage(result.uri);
+            }
+
+        
+            const uri = image;
+            const childPath = `chat-images/${id}/${auth.currentUser.uid}/${Math.random().toString(36)}`;
+            
+    
+            const response = await fetch(uri);
+            const blob = await response.blob();
+    
+            const task = firebase
+                .storage()
+                .ref()
+                .child(childPath)
+                .put(blob);
+    
+            const taskProgress = snapshot => {
+                console.log(`transferred: ${snapshot.bytesTransferred}`)
+            }
+    
+            const taskCompleted = () => {
+                task.snapshot.ref.getDownloadURL().then((snapshot) => {
+                    console.warn('IT GOT FUCKING SAVED')
+                    setImagePath(snapshot);
+                    console.log(snapshot)
+                })
+            }
+    
+            const taskError = snapshot => {
+                console.log(snapshot)
+            }
+    
+            task.on("state_changed", taskProgress, taskError, taskCompleted);
+        
+
+    
+
+        
+
+        db.collection("chats")
+            .doc(id)
+            .collection('messages')
+            .add({
+                isPicture: true,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                message: imagePath,
+                displayName: auth.currentUser.displayName,
+                email: auth.currentUser.email,
+                photoURL: auth.currentUser.photoURL,
+
+            })
+
+        console.warn("this all wrapped up")
+
+        
+       
+
+
+    }
+
     function sendMessage(){
         Keyboard.dismiss()
 
@@ -119,10 +195,46 @@ export default function ChatScreen({ navigation, route}) {
         }
     }
 
+
+    function renderChatMessageOrImage(id, data){
+        if (data.isPicture == true && data.message != ''){
+
+            return (
+                <View style={{ width: 200, height: 200}}>
+               <Avatar source={{uri: data.message}} style={{ width: 200, height: 200}}></Avatar>
+                </View>
+
+            )
+            
+
+        }
+
+        else {
+
+            return (
+                <>
+                <Avatar 
+                    position="absolute"
+                    rounded
+                    bottom={-15}
+                    right={-5}
+                    size={30}
+                    source={{uri: data.photoURL}}
+                ></Avatar>
+                <Text style={styles.reciverText}>{data.message}</Text>
+            </>
+
+            )
+            
+        
+            
+        }
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white"}}>
             <StatusBar style="light"></StatusBar>
-        
+            
             
             
             <KeyboardAvoidingView
@@ -135,31 +247,11 @@ export default function ChatScreen({ navigation, route}) {
                         {messages.map(({id, data}) => (
                             data.email === auth.currentUser.email ? (
                                 <View key={id} style={styles.reciver}>
-                                    <Avatar 
-                                        position="absolute"
-                                        rounded
-                                        bottom={-15}
-                                        right={-5}
-                                        size={30}
-                                        source={{uri: data.photoURL}}
-                                    ></Avatar>
-                                    <Text style={styles.reciverText}>{data.message}</Text>
+                                    {renderChatMessageOrImage(id, data)}
                                 </View>
-                            ): (
+                                ): (
                                 <View key={id} style={styles.sender}>
-                                    <TouchableOpacity onPress={() => navigation.navigate("Profile", {currentUser: data})}>
-                                    <Avatar 
-                                        position="absolute"
-                                        rounded
-                                        bottom={-15}
-                                        right={-5}
-                                        size={30}
-                                        source={{uri: data.photoURL}}
-
-                                    ></Avatar>
-                                    </TouchableOpacity>
-                                    <Text style={styles.senderText}>{data.message}</Text>
-                                    <Text style={styles.senderName}>{data.displayName}</Text>
+                                    {renderChatMessageOrImage(id, data)}
                                 </View>
 
                             )
@@ -168,6 +260,9 @@ export default function ChatScreen({ navigation, route}) {
                     </ScrollView>
 
                     <View style={styles.footer}>
+                        <TouchableOpacity onPress={sendPictureImage}>
+                            <Avatar source={{uri: "https://static.thenounproject.com/png/17840-200.png"}} style={{width: 35, height: 35}} />
+                        </TouchableOpacity>
                         <TextInput 
                         value={input}
                         onChangeText={(text) => setInput(text)}
