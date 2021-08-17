@@ -38,10 +38,16 @@ export default function CustomListItem({ id, enterChat, photo, userName, isDM, m
         else {
 
             if (lastMessage[lastMessage.length-1].data.email == auth.currentUser.email){
+                if (lastMessage[lastMessage.length-1].data.isPicture == true){
+                    return "You: sent a photo"
+                }
                 return "You:" + lastMessage[lastMessage.length-1].data.message
 
             }
             else {
+                if (lastMessage[lastMessage.length-1].data.isPicture == true){
+                    return `${lastMessage[lastMessage.length-1].data.displayName}: ` + "sent a photo"
+                }
                 return `${lastMessage[lastMessage.length-1].data.displayName}:` + lastMessage[lastMessage.length-1].data.message
 
             }

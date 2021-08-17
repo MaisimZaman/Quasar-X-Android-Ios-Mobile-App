@@ -9,7 +9,7 @@ import { Platform } from 'react-native'
 import { ScrollView, TextInput } from 'react-native-gesture-handler'
 import { Keyboard } from 'react-native'
 import { auth, db } from '../../services/firebase'
-import * as firebase from 'firebase'
+import firebase from 'firebase'
 import * as ImagePicker from 'expo-image-picker';
 
 
@@ -22,9 +22,7 @@ export default function ChatScreen({ navigation, route}) {
 
     const [messages, setMessages] = useState([])
 
-    const [image, setImage] = useState('')
 
-    const [imagePath, setImagePath] = useState('')
 
     
 
@@ -84,72 +82,66 @@ export default function ChatScreen({ navigation, route}) {
 
 
     async function sendPictureImage(){
-            let result = await ImagePicker.launchImageLibraryAsync({
-              mediaTypes: ImagePicker.MediaTypeOptions.Images,
-              
-            });
-            console.log(result);
-        
-            if (!result.cancelled) {
-              setImage(result.uri);
-            }
+    
 
-        
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1.7, 1],
+            quality: 1,
+            
+        });
+    
+        if (!result.cancelled) {
+            const image =   result.uri;
             const uri = image;
             const childPath = `chat-images/${id}/${auth.currentUser.uid}/${Math.random().toString(36)}`;
-            
-    
+        
+
             const response = await fetch(uri);
             const blob = await response.blob();
-    
+
             const task = firebase
                 .storage()
                 .ref()
                 .child(childPath)
                 .put(blob);
-    
+
             const taskProgress = snapshot => {
                 console.log(`transferred: ${snapshot.bytesTransferred}`)
             }
-    
+
             const taskCompleted = () => {
                 task.snapshot.ref.getDownloadURL().then((snapshot) => {
-                    console.warn('IT GOT FUCKING SAVED')
-                    setImagePath(snapshot);
-                    console.log(snapshot)
-                })
+                
+                saveImageMessage(snapshot);
+                console.log(snapshot)
+            })
             }
-    
+
             const taskError = snapshot => {
                 console.log(snapshot)
             }
-    
+
             task.on("state_changed", taskProgress, taskError, taskCompleted);
-        
+        }
 
-    
 
-        
-
-        db.collection("chats")
+        function saveImageMessage(downloadURL){
+            db.collection("chats")
             .doc(id)
             .collection('messages')
             .add({
                 isPicture: true,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                message: imagePath,
+                message: downloadURL,
                 displayName: auth.currentUser.displayName,
                 email: auth.currentUser.email,
                 photoURL: auth.currentUser.photoURL,
 
             })
 
-        console.warn("this all wrapped up")
-
-        
-       
-
-
+        }
     }
 
     function sendMessage(){
@@ -199,10 +191,15 @@ export default function ChatScreen({ navigation, route}) {
     function renderChatMessageOrImage(id, data){
         if (data.isPicture == true && data.message != ''){
 
+            
+
             return (
-                <View style={{ width: 200, height: 200}}>
-               <Avatar source={{uri: data.message}} style={{ width: 200, height: 200}}></Avatar>
-                </View>
+                <TouchableOpacity onPress={() => navigation.navigate("Chat-Image", {image: data.message})}>
+
+                    <View style={{ width: 200, height: 118}}>
+                        <Image source={{uri: data.message}} style={{ width: 200, height: 118}}></Image>
+                    </View>
+                </TouchableOpacity>
 
             )
             
