@@ -11,6 +11,7 @@ import { Keyboard } from 'react-native'
 import { auth, db } from '../../services/firebase'
 import firebase from 'firebase'
 import * as ImagePicker from 'expo-image-picker';
+import TextPostCard from '../../components/TextPostCard'
 
 
 
@@ -178,11 +179,11 @@ export default function ChatScreen({ navigation, route}) {
 
     function clickChatInfo(){
         if (isDm){
-            navigation.navigate("Chat-Members", { navigation: navigation, membersList: members, isDms: true, chatName: '', chatId: id, admin: auth.currentUser.uid})
+            navigation.navigate("Chat-Members", { navigation: navigation, membersList: members, isDms: true, chatName: '', chatId: id, admin: auth.currentUser.uid, photo: photo})
         }
 
         else {
-            navigation.navigate("Chat-Members", { navigation: navigation, membersList: members, isDms: false, chatName: chatName, chatId: id, admin: admin})
+            navigation.navigate("Chat-Members", { navigation: navigation, membersList: members, isDms: false, chatName: chatName, chatId: id, admin: admin, photo: photo})
 
         }
     }
@@ -194,6 +195,15 @@ export default function ChatScreen({ navigation, route}) {
             
 
             return (
+                <>
+                <Avatar 
+                        position="absolute"
+                        rounded
+                        bottom={-15}
+                        right={-5}
+                        size={30}
+                        source={{uri: data.photoURL}}
+                    ></Avatar>
                 <TouchableOpacity onPress={() => navigation.navigate("Chat-Image", {image: data.message})}>
 
                     <View style={{ width: 200, height: 118}}>
@@ -201,9 +211,38 @@ export default function ChatScreen({ navigation, route}) {
                     </View>
                 </TouchableOpacity>
 
+                </>
+
             )
             
 
+        }
+
+        else if (data.isSharePost == true){
+            return (
+                <>
+                <Avatar 
+                        position="absolute"
+                        rounded
+                        bottom={-15}
+                        right={-5}
+                        size={30}
+                        source={{uri: data.photoURL}}
+                ></Avatar>
+                <View style={{width: 230, height: 300}}>
+                    <TextPostCard
+                    id={data.postInfo.id}
+                    posterName={data.postInfo.posterName}
+                    posterProfilePic={data.postInfo.posterProfilePic}
+                    image={data.postInfo.image}
+                    caption={data.postInfo.caption}
+                    navigation={navigation}
+                    email={data.postInfo.posterProfilePic.email}
+
+                    />
+                </View>
+                </>
+            )
         }
 
         else {

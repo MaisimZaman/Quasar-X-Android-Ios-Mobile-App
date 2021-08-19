@@ -10,6 +10,20 @@ export default function StoryScreen(props) {
 
     const [storyImage, setStoryImage] = useState('')
 
+    const [stage, setStage] = useState(0)
+
+
+
+    setInterval(() => {
+        setStage(stage + 1)
+
+        if (stage == 2){
+            props.navigation.goBack();
+        }
+        
+        
+    }, 10000);
+
 
  
 
@@ -20,10 +34,14 @@ export default function StoryScreen(props) {
         const unsubscribe = () =>  {
             db.collection("stories")
             .where("user", "==", userID).get()
-            .then((doc) => {
+            .then((snap) => {
 
-                console.warn(userID)
-                setStoryImage(doc.downloadURL)
+                snap.forEach(doc => {
+                    setStoryImage(doc.data().downloadURL)
+                });
+
+                
+                
 
             })
             .catch(e => {
@@ -68,6 +86,7 @@ export default function StoryScreen(props) {
 
             <Image
                 source={{ uri: storyImage}}
+                style={{height: 300, width: 300}}
             >
             </Image>
         </View>

@@ -29,6 +29,7 @@ export default function AddChat({ navigation }) {
             isDM: false,
             admin: auth.currentUser.uid,
             chatMembers: chatMembers,
+            groupPhoto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4apNLOP0befEKu609F8yvMt_f-f7DVjNElhfMU2svKwmHjTCv7l-FNuor2rnCw33By5s&usqp=CAU"
 
 
         }).then(() => {

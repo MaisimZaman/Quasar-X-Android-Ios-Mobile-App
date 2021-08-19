@@ -41,12 +41,19 @@ export default function CustomListItem({ id, enterChat, photo, userName, isDM, m
                 if (lastMessage[lastMessage.length-1].data.isPicture == true){
                     return "You: sent a photo"
                 }
+                else if (lastMessage[lastMessage.length-1].data.isSharePost == true){
+                    return  "You: shared a post"
+                }
                 return "You:" + lastMessage[lastMessage.length-1].data.message
 
             }
             else {
                 if (lastMessage[lastMessage.length-1].data.isPicture == true){
                     return `${lastMessage[lastMessage.length-1].data.displayName}: ` + "sent a photo"
+                }
+
+                else if (lastMessage[lastMessage.length-1].data.isSharePost == true){
+                    return `${lastMessage[lastMessage.length-1].data.displayName}: ` + "shared a post"
                 }
                 return `${lastMessage[lastMessage.length-1].data.displayName}:` + lastMessage[lastMessage.length-1].data.message
 

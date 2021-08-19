@@ -1,22 +1,27 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react'
-import {View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native'
+import {View,  StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native'
 import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
 import CustomListItem from '../../components/CustomListItem'
 import { auth, db } from '../../services/firebase';
 import {SimpleLineIcons} from '@expo/vector-icons'
 import { Button } from 'react-native';
+import { ListItem } from 'react-native-elements'
+import firebase from 'firebase';
+import { CardItem } from 'native-base';
+import { Text } from 'react-native-elements';
 
 
-export default function HomeScreen({ navigation }) {
+
+export default function SendPostMessageScreen(props) {
+
+    const navigation = props.navigation 
+
+    const {id,posterName, PosterId, posterProfilePic, image,caption,  email} = props.route.params;
 
     const [chats, setChats] = useState([]);
     const [userInfo, setUserInfo] = useState([])
     const [isDms, setIsDms] = useState(true);
-    const [userInfoLoaded, setUserInfoLoaded] = useState(false)
-    
-  
-
-    
+    const [selectedChats, setSelectedChats] = useState([])
 
     useEffect(() => {
         function unsubscribeDms(){ 
@@ -127,61 +132,15 @@ export default function HomeScreen({ navigation }) {
     
     
 
-    function signOutUser(){
-        auth.signOut().then(() => {
-            navigation.replace('Login')
-        })
-    }
-
-
     
 
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            title: "Chats",          
-
-            
-
-            headerRight: () => (
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: 80,
-                    marginRight: 20
-
-                }}>
-                    
-                <View style={{marginLeft: 20}}>
-                    <TouchableOpacity onPress={() => navigation.navigate("Profile", {currentUser: auth.currentUser})} activeOpacity={0.5}>
-                        <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }}/>
-                    </TouchableOpacity>
-                </View>
-
-                    <TouchableOpacity onPress={() => navigation.navigate("AddChat")}>
-                        <SimpleLineIcons name="pencil" size={24} color="black"></SimpleLineIcons>
-                    </TouchableOpacity>
-
-                </View>
-            )
-
-            
-
-
+            title: "Share Post",          
         });
     }, [navigation])
 
-    function enterChat(id, chatName, photo, isDm, members, admin){
-        navigation.navigate("Chat", {
-            id: id,
-            chatName: chatName,
-            photo: photo,
-            isDm: isDm,
-            members: members,
-            admin: admin
-
-        })
-    }
 
     function switchChat(){
         if (isDms){
@@ -195,19 +154,76 @@ export default function HomeScreen({ navigation }) {
 
     }
 
+    function addChatToShareBox(chatId){
+        if (!selectedChats.includes(chatId)){
+            setSelectedChats(selectedChats => [...selectedChats, chatId])
+
+        }
+        else {
+            for( var i = 0; i < selectedChats.length; i++){ 
+                                   
+                if ( selectedChats[i] === chatId) { 
+                    setSelectedChats(selectedChats => [...selectedChats].splice(i))
+                }
+            }
+        }
+
+    }
+
+
+    function sendPostMessage(){
+        
+        function sharePost(chatId){
+            db.collection('chats')
+            .doc(chatId)
+            .collection('messages')
+            .add({
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                isSharePost: true,
+                postInfo: {id: id, posterName: posterName, PosterId: PosterId, posterProfilePic: posterProfilePic, image: image,caption: caption, email: email},
+                displayName: auth.currentUser.displayName,
+                email: auth.currentUser.email,
+                photoURL: auth.currentUser.photoURL,
+            })
+
+        }
+
+        selectedChats.forEach(sharePost)
+
+        navigation.goBack()
+        
+
+    }
+
+    
+
     function chatTypeLogic(){
         if (isDms){
             return (
                 chats.map(({id, data, otherUser}) => (
-                    <CustomListItem key={id} 
-                    id={id} 
-                    enterChat={enterChat} 
-                    photo={getphotoUrl(otherUser)} 
-                    userName={getDisplayName(otherUser)} 
-                    isDM={true}
-                    members={[auth.currentUser.uid, otherUser]}
-                    admin={auth.currentUser.uid}
-                    />
+                    <TouchableOpacity onPress={() => addChatToShareBox(id)}>
+                        <View>
+                            <CardItem key={id} bottomDivider style={selectedChats.includes(id) ? {backgroundColor: "#00FF00"} : {backgroundColor: "white"}}>
+                                <Avatar 
+                                    rounded
+                                    source={{
+                                        uri: getphotoUrl(otherUser)
+                                    }}
+                                />
+                                <ListItem.Content >
+                                    <ListItem.Title style={{fontWeight: "800"}}>
+                                        {getDisplayName(otherUser)}
+                                    </ListItem.Title>
+                
+                                </ListItem.Content>
+                                
+                            </CardItem>
+                        </View>
+
+
+                    </TouchableOpacity>
+
+                
                 ))
             )
         }
@@ -215,15 +231,26 @@ export default function HomeScreen({ navigation }) {
             return (
                 chats.map(({id, data}) => (
                 
-                    <CustomListItem 
-                        id={id}
-                        enterChat={enterChat}
-                        photo={data.groupPhoto != undefined? data.groupPhoto : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4apNLOP0befEKu609F8yvMt_f-f7DVjNElhfMU2svKwmHjTCv7l-FNuor2rnCw33By5s&usqp=CAU"}
-                        userName={data.chatName}
-                        isDM={false}
-                        members={data.chatMembers}
-                        admin={data.admin}
-                    />
+                    <TouchableOpacity >
+                        <View style={{backgroundColor: "green"}}>
+                            <ListItem key={id} bottomDivider>
+                                <Avatar 
+                                    rounded
+                                    source={{
+                                        uri: data.photo
+                                    }}
+                                />
+                                <ListItem.Content>
+                                    <ListItem.Title style={{fontWeight: "800"}}>
+                                        {data.userName}
+                                    </ListItem.Title>
+                
+                                </ListItem.Content>
+                            </ListItem>
+                        </View>
+
+
+                    </TouchableOpacity>
                 ))
 
             )
@@ -245,11 +272,20 @@ export default function HomeScreen({ navigation }) {
 
     return (
         <SafeAreaView>
+
+            <Text h3>Pick a Chat to share with</Text>
             
-            <Button title={ButtonName()} onPress={switchChat}/>
+            <Button title="Send" onPress={sendPostMessage} disabled={selectedChats.length == 0}></Button>
+            
             <ScrollView style={styles.container}>
                 {chatTypeLogic()}
             </ScrollView>
+
+            <Button title={ButtonName()} onPress={switchChat}/>
+
+            
+
+            
             
         </SafeAreaView>
     )

@@ -94,63 +94,75 @@ export default function PostCard(props){
         }
     }
 
+    
+
 
     return (
         
-        <Card>
+            <Card>
+            <CardItem>
+            <Left>
+                <TouchableOpacity onPress={() => navigation.navigate("Profile", {currentUser: {
+                    displayName: posterName,
+                    email: email,
+                    photoURL: posterProfilePic,
+                    uid: PosterId
+                }})}>
+                <Thumbnail source={{uri: posterProfilePic}} />
+                </TouchableOpacity>
+                <Body>
+                    <Text>{posterName} </Text>
+                    <Text note>.</Text>
+                </Body>
+            </Left>
+        </CardItem>
+        <CardItem cardBody>
+            <Image source={{uri: image}} style={{ height: 300, width: null, flex: 1 }} />
+        </CardItem>
+        <CardItem style={{ height: 45 }}>
+            <Left>
+                    {likesRender()}
+            
+                <Button transparent onPress={() => navigation.navigate("Comments", {
+                    posterProfilePic: posterProfilePic,
+                    posterUserName: posterName,
+                    posterCaption: caption,
+                    postId: id,
+                    image: image,
+                })}>
+                    <Icon name="ios-chatbubbles-outline" style={{ color: 'black' }} />
+                </Button>
+                <Button transparent onPress={() => navigation.navigate("Share-Post", {
+                    id: id,
+                    posterName: posterName,
+                    PosterId: PosterId,
+                    posterProfilePic: posterProfilePic,
+                    image: image,
+                    caption: caption,
+                    email: email
+
+                })}>
+                    <Icon name="ios-send-outline" style={{ color: 'black' }} />
+                </Button>
+
+
+            </Left>
+        </CardItem>
+
+        <CardItem style={{ height: 20 }}>
+            <Text>{likesCount.length}</Text>
+        </CardItem>
         <CardItem>
-        <Left>
-            <TouchableOpacity onPress={() => () => navigation.navigate("Profile", {currentUser: {
-                displayName: posterName,
-                email: email,
-                photoURL: posterProfilePic,
-                uid: PosterId
-            }})}>
-            <Thumbnail source={{uri: posterProfilePic}} />
-            </TouchableOpacity>
             <Body>
-                <Text>{posterName} </Text>
-                <Text note>21</Text>
-            </Body>
-        </Left>
-    </CardItem>
-    <CardItem cardBody>
-        <Image source={{uri: image}} style={{ height: 300, width: null, flex: 1 }} />
-    </CardItem>
-    <CardItem style={{ height: 45 }}>
-        <Left>
-                {likesRender()}
-        
-            <Button transparent onPress={() => navigation.navigate("Comments", {
-                posterProfilePic: posterProfilePic,
-                posterUserName: posterName,
-                posterCaption: caption,
-                postId: id,
-                image: image,
-            })}>
-                <Icon name="ios-chatbubbles-outline" style={{ color: 'black' }} />
-            </Button>
-            <Button transparent>
-                <Icon name="ios-send-outline" style={{ color: 'black' }} />
-            </Button>
-
-
-        </Left>
-    </CardItem>
-
-    <CardItem style={{ height: 20 }}>
-        <Text>{likesCount.length}</Text>
-    </CardItem>
-    <CardItem>
-        <Body>
-            <Text>
-                <Text style={{ fontWeight: "900" }}>
+                <Text>
+                    <Text style={{ fontWeight: "900" }}>
+                    </Text>
+                    {caption}
                 </Text>
-                {caption}
-            </Text>
-        </Body>
-    </CardItem>
-</Card>
+            </Body>
+        </CardItem>
+    </Card>
+
          
 
     )

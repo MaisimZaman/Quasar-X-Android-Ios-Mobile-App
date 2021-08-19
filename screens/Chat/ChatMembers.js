@@ -7,11 +7,13 @@ import { Text } from 'react-native-elements';
 import  Icon  from 'react-native-vector-icons/FontAwesome' ;
 import { Button, Input } from 'react-native-elements';
 import * as firebase from 'firebase';
+import * as ImagePicker from 'expo-image-picker';
+import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
 
 
 export default function chatMembers(props) {
 
-    const {navigation, membersList, isDms, chatName, chatId} = props.route.params;
+    const {navigation, membersList, isDms, chatName, chatId, photo} = props.route.params;
 
  
 
@@ -29,6 +31,63 @@ export default function chatMembers(props) {
 
         return unsubscribe
     }, [])
+
+    async function updateGroupPhoto(){
+    
+
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1.7, 1],
+            quality: 1,
+            
+        });
+    
+        if (!result.cancelled) {
+            const image =   result.uri;
+            const uri = image;
+            const childPath = `group-chat-image/${chatId}/${Math.random().toString(36)}`;
+        
+
+            const response = await fetch(uri);
+            const blob = await response.blob();
+
+            const task = firebase
+                .storage()
+                .ref()
+                .child(childPath)
+                .put(blob);
+
+            const taskProgress = snapshot => {
+                console.log(`transferred: ${snapshot.bytesTransferred}`)
+            }
+
+            const taskCompleted = () => {
+                task.snapshot.ref.getDownloadURL().then((snapshot) => {
+                
+                saveGroupImage(snapshot);
+                console.log(snapshot)
+            })
+            }
+
+            const taskError = snapshot => {
+                console.log(snapshot)
+            }
+
+            task.on("state_changed", taskProgress, taskError, taskCompleted);
+        }
+
+
+        function saveGroupImage(downloadURL){
+            db.collection("chats")
+            .doc(chatId)
+            .update({
+                groupPhoto: downloadURL
+
+            })
+
+        }
+    }
 
     
     function getUserData(uid){
@@ -93,11 +152,13 @@ export default function chatMembers(props) {
     function renderAddMorePeople(){
         if (!isDms){
             return (
-                <Button title="Add more friends? " onPress={() => navigation.navigate("Add-More", {
-                    addedUsers: membersList,
-                    chatName: chatName,
-                    chatId: chatId
-                })}></Button>
+                <View style={{paddingBottom: 20, paddingTop: 20, paddingLeft: 50, paddingRight: 50}}>
+                    <Button  title="Add more friends? " onPress={() => navigation.navigate("Add-More", {
+                        addedUsers: membersList,
+                        chatName: chatName,
+                        chatId: chatId
+                    })}></Button>
+                </View>
 
             )
         }
@@ -129,7 +190,7 @@ export default function chatMembers(props) {
     function editChatName(){
         if (!isDms){
             return (
-                <>
+                <View>
                 <Input 
                 placeholder='Update Chat Name'
                 value={newchatName}
@@ -139,8 +200,11 @@ export default function chatMembers(props) {
                     <Icon name="wechat" type="antdesign" size={24} color="black"/>
                 }/>
 
+                <View>
                 <Button disabled={newchatName==''} title="Update Chat Name" onPress={updateChatName}></Button>
-                </>
+                </View>
+                </View>
+                
 
 
             )
@@ -171,10 +235,32 @@ export default function chatMembers(props) {
         }
     }
 
+    function renderGroupIcon(){
+        if (!isDms){
+            return (
+                <TouchableOpacity onPress={updateGroupPhoto}>
+                    <Avatar 
+                    rounded
+                    style={{
+                        height: 100,
+                        width: 100
+                    }}
+                    source={{
+                        uri: photo
+                    }}
+                    />
+                </TouchableOpacity>
+            )
+        }
+    }
+
 
     return (
         <View>
-            {editChatName()}
+            <View style={{flexDirection: "row"}}>
+                {renderGroupIcon()}
+                {editChatName()}
+            </View>
             {renderAddMorePeople()}
             <ScrollView>
                 <Text h3>{isDms ? 'Direct Messages with' : 'Group Members'}</Text>

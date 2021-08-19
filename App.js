@@ -31,6 +31,7 @@ import chatMembers from './screens/Chat/ChatMembers';
 import AddMore from './screens/Chat/AddMore';
 import VideoExplore from './screens/Video/VideoExplore';
 import ChatImageDetail from './screens/Chat/ChatImageDetail';
+import SendPostMessageScreen from './screens/Chat/SendPostMessageScreen';
 import { Icon } from 'native-base';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
@@ -87,6 +88,7 @@ export default function App() {
         <Stack.Screen name="Edit-Profile" component={EditProfile}></Stack.Screen>
         <Stack.Screen name="Update-Profile-Pic" component={UpdateProfilePic}></Stack.Screen>
         <Stack.Screen name="Post-Detail" component={PostDetail}></Stack.Screen>
+        <Stack.Screen name="Share-Post" component={SendPostMessageScreen}></Stack.Screen>
         <Stack.Screen name="Comments" component={CommentsPage}></Stack.Screen>
         <Stack.Screen name="Video-Comments" component={VideoComments}></Stack.Screen>
         <Stack.Screen name="Story-Screen" component={StoryScreen}></Stack.Screen>
