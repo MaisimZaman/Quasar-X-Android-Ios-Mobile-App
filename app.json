@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "quasarX-mobile",
-    "slug": "quasarX-mobile",
-    "version": "1.0.0",
+    "name": "QuasarX-Mobile",
+    "slug": "QuasarX-Mobile",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./services/assets/mainlogo.png",
     "splash": {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { View, TextInput, Image, Button, Text, StyleSheet } from 'react-native'
+import { View, TextInput, Image, Button, Text, StyleSheet, KeyboardAvoidingView, Dimensions } from 'react-native'
+
 
 import firebase from 'firebase'
 import {auth, db} from '../../services/firebase'
@@ -71,34 +72,52 @@ export default function SaveVideo(props) {
 
     
 
-
-
     return (
-        <View style={{ flex: 1 }}>
-            
-            <TextInput
-                style={styles.textInput}
-                placeholder="Write a Caption . . ."
-                onChangeText={(caption) => setCaption(caption)}
-            />
+		<View style={styles.container}>
+			<TextInput
+				value={caption}
+                placeholder="Write Your Caption...."
+				onChangeText={(caption) => setCaption(caption)}
+				style={{ color: "black", fontSize: 22 }}
+				multiline={true}
+				autoFocus
+				selectionColor="#fff"
+			/>
+			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.bottom}>
+				<Button title="Post Reel" style={styles.button} appearance="filled" onPress={uploadVideo}>
+				</Button>
+			</KeyboardAvoidingView>
+		</View>
+	)
 
-            <Button title="Save" onPress={() => uploadVideo()} />
-
-
-            
-
-            
-        </View>
-    )
 }
 
 const styles = StyleSheet.create({
     textInput: {
+        bottom: 0,
         flex: 1,
-        backgroundColor: "#ECECEC",
+        marginRight: 15,
+       
         padding: 10,
         color: "grey",
         borderRadius: 30,
 
     },
+    container: {
+		flex: 1,
+		//backgroundColor: "#222B45",
+		color: "white",
+		padding: 30,
+		paddingTop: 80,
+
+		width: Dimensions.get("window").width
+	},
+	bottom: {
+		flex: 1,
+		justifyContent: "flex-end",
+		marginBottom: 36
+	},
+	button: {
+		marginBottom: 30
+	}
 })

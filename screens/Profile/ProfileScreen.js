@@ -123,6 +123,7 @@ export default function Profile(props) {
                     posterProfilePic: profile.photoURL,
                     image: image.data.downloadURL,
                     postDate: "idk",
+                    email: auth.currentUser.email,
                     caption: image.data.caption,
                     likes: image.data.likesCount,
                     

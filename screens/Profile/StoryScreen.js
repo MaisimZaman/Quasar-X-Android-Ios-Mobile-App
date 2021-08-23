@@ -80,13 +80,18 @@ export default function StoryScreen(props) {
         }
     }
 
+    if (storyImage == undefined){
+        return (
+            <Text>No Story yet</Text>
+        )
+    }
+
     return (
         <View>
-            <Text>{storyImage}</Text>
 
             <Image
                 source={{ uri: storyImage}}
-                style={{height: 300, width: 300}}
+                style={{width: 320, height: 300, top: 200, left: 10}}
             >
             </Image>
         </View>

@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react'
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body } from 'native-base'
 import { auth, db } from '../services/firebase'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-export default function Stories({userFollowing}) {
+export default function Stories({userFollowing, navigation}) {
 
     const [profiles, setProfiles] = useState([])
 
@@ -17,7 +18,7 @@ export default function Stories({userFollowing}) {
 
                 
                 db.collection("users").doc(data.userId).get().then((doc) => {
-                    var userInfo = {id: doc.id, data: doc.data().photoURL}
+                    var userInfo = {id: doc.id, data: doc.data()}
                     if (profiles.length < userFollowing.length){
     
                         setProfiles(profiles => [...profiles, userInfo])
@@ -43,10 +44,15 @@ export default function Stories({userFollowing}) {
     function renderStories(){
         return (
             profiles.map(({id, data}) => (
+                <TouchableOpacity onPress={() => navigation.navigate("Story-Screen", data.uid)}>
+
+                
                 <Thumbnail
                         key={id}
                         style={{ marginHorizontal: 5, borderColor: 'pink', borderWidth: 2 }}
-                        source={{uri: data}} />
+                        source={{uri: data.photoURL}} />
+
+                </TouchableOpacity>
 
             ))
         )

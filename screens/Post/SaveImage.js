@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { View, TextInput, Image, Button, Text, StyleSheet } from 'react-native'
+import { View, TextInput, Image, Button,  Text, StyleSheet, Dimensions, KeyboardAvoidingView } from 'react-native'
+//import { Button } from "@ui-kitten/components"
 
 import firebase from 'firebase'
 import {auth, db} from '../../services/firebase'
@@ -81,28 +82,30 @@ export default function Save(props) {
     }
 
     
-
-
-
     return (
-        <View style={{ flex: 1 }}>
-            <Image source={{ uri: picture }} />
-            
-            <TextInput
-                style={styles.textInput}
-                placeholder="Write a Caption . . ."
-                onChangeText={(caption) => setCaption(caption)}
-            />
+		<View style={styles.container}>
+			<TextInput
+				value={caption}
+                placeholder="Write Your Caption...."
+				onChangeText={(caption) => setCaption(caption)}
+				style={{ color: "black", fontSize: 22 }}
+				multiline={true}
+				autoFocus
+				selectionColor="#fff"
+			/>
+			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.bottom}>
+				<Button title="Post" style={styles.button} appearance="filled" onPress={() => uploadImage(false)}>
+				</Button>
+                <Button title="Set as Story" style={styles.button} appearance="filled" onPress={() => uploadImage(true)}>
+				</Button>
+			</KeyboardAvoidingView>
+		</View>
+	)
 
-            <Button title="Save" onPress={() => uploadImage(false)} />
 
-            <Button title="Add to Story" onPress={() => uploadImage(true)} />
+   
 
-            <Image source={{ uri: picture }} />
-
-            
-        </View>
-    )
+   
 }
 
 const styles = StyleSheet.create({
@@ -110,10 +113,27 @@ const styles = StyleSheet.create({
         bottom: 0,
         flex: 1,
         marginRight: 15,
-        backgroundColor: "#ECECEC",
+       
         padding: 10,
         color: "grey",
         borderRadius: 30,
 
     },
+    container: {
+		flex: 1,
+		//backgroundColor: "#222B45",
+		color: "white",
+		padding: 30,
+		paddingTop: 80,
+
+		width: Dimensions.get("window").width
+	},
+	bottom: {
+		flex: 1,
+		justifyContent: "flex-end",
+		marginBottom: 36
+	},
+	button: {
+		marginBottom: 30
+	}
 })

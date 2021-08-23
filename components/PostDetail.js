@@ -15,6 +15,7 @@ import { ListItem } from "react-native-elements/dist/list/ListItem";
 import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon } from 'native-base'
 import { auth, db } from "../services/firebase";
 import firebase from 'firebase'
+import { Avatar } from "react-native-elements/dist/avatar/Avatar";
 
 
 
@@ -100,7 +101,7 @@ export default function PostDetail(props){
         if (auth.currentUser.uid = PosterId){
             return (
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Icon name="ios-send-outline" style={{ color: 'black' }} />
+                <Avatar source={{uri: "https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-glyph-1/32/-_Dot-More-Vertical-Menu-512.png"}} style={{ color: 'black', width: 25, height: 25 }} />
                 </TouchableOpacity>
             )
         }
@@ -131,7 +132,7 @@ export default function PostDetail(props){
                   .delete()
 
                   //navigation.navigate("Profile", {currentUser: auth.currentUser})
-                  navigation.goBack()
+                  props.navigation.goBack()
               }}
             >
               <Text style={styles.textStyle}>Delete</Text>
@@ -188,7 +189,16 @@ export default function PostDetail(props){
                 })}>
                     <Icon name="ios-chatbubbles-outline" style={{ color: 'black' }} />
                 </Button>
-                <Button transparent>
+                <Button transparent onPress={() => props.navigation.navigate("Share-Post", {
+                    id: id,
+                    posterName: posterName,
+                    PosterId: PosterId,
+                    posterProfilePic: posterProfilePic,
+                    image: image,
+                    caption: caption,
+                    email: email
+
+                })}>
                     <Icon name="ios-send-outline" style={{ color: 'black' }} />
                 </Button>
 

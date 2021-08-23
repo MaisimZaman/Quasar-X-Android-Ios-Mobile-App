@@ -77,7 +77,7 @@ export default function CustomListItem({ id, enterChat, photo, userName, isDM, m
                 <ListItem.Title style={{fontWeight: "800"}}>
                     {userName}
                 </ListItem.Title>
-                <ListItem.Subtitle  numberOfLines={1} ellipsizeMode="tail">
+                <ListItem.Subtitle  numberOfLines={1} ellipsizeMode="tail" style={lastMessage.length > 0 &&  lastMessage[lastMessage.length-1].data.displayName != auth.currentUser.displayName ? {fontWeight: "bold", color: "black"} : {color: "gray"}}>
                     {subTextLogic()}
                 </ListItem.Subtitle>
             </ListItem.Content>

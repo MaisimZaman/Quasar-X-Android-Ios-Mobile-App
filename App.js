@@ -36,7 +36,6 @@ import { Icon } from 'native-base';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
 
-
 const Stack = createStackNavigator();
 
 var globalScreenOptions = {

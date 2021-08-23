@@ -213,6 +213,7 @@ export default function Feed({ navigation }) {
             <Container style={styles.container}>
                     <Stories
                     userFollowing={userFollowing}
+                    navigation={navigation}
                     />
     
                     {renderPosts()}
