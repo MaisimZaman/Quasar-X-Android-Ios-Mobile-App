@@ -9,6 +9,8 @@ import { ListItem } from 'react-native-elements'
 import firebase from 'firebase';
 import { CardItem } from 'native-base';
 import { Text } from 'react-native-elements';
+import { useSelector } from 'react-redux';
+import { selectAllUsers } from '../../slices/navSlice';
 
 
 
@@ -22,6 +24,8 @@ export default function SendPostMessageScreen(props) {
     const [userInfo, setUserInfo] = useState([])
     const [isDms, setIsDms] = useState(true);
     const [selectedChats, setSelectedChats] = useState([])
+
+    const allTheUsers = useSelector(selectAllUsers)
 
     useEffect(() => {
         function unsubscribeDms(){ 
@@ -48,12 +52,9 @@ export default function SendPostMessageScreen(props) {
 
             
         })
+  
 
-        db.collection('users')
-        .onSnapshot((snapshot) => setUserInfo(snapshot.docs.map(doc => ({
-            uid: doc.id,
-            data: doc.data()
-        }))))    
+        setUserInfo(allTheUsers)
         }
 
         function unsubscribeGcs(){

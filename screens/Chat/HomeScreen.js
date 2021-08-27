@@ -5,6 +5,8 @@ import CustomListItem from '../../components/CustomListItem'
 import { auth, db } from '../../services/firebase';
 import {SimpleLineIcons} from '@expo/vector-icons'
 import { Button } from 'react-native';
+import { useSelector } from 'react-redux';
+import { selectAllUsers } from '../../slices/navSlice';
 
 
 export default function HomeScreen({ navigation }) {
@@ -13,6 +15,8 @@ export default function HomeScreen({ navigation }) {
     const [userInfo, setUserInfo] = useState([])
     const [isDms, setIsDms] = useState(true);
     const [userInfoLoaded, setUserInfoLoaded] = useState(false)
+
+    const allTheUsers = useSelector(selectAllUsers)
     
   
 
@@ -44,11 +48,8 @@ export default function HomeScreen({ navigation }) {
             
         })
 
-        db.collection('users')
-        .onSnapshot((snapshot) => setUserInfo(snapshot.docs.map(doc => ({
-            uid: doc.id,
-            data: doc.data()
-        }))))    
+        setUserInfo(allTheUsers)
+             
         }
 
         function unsubscribeGcs(){

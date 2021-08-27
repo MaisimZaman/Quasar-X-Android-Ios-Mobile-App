@@ -9,6 +9,10 @@ import { Button, Input } from 'react-native-elements';
 import * as firebase from 'firebase';
 import * as ImagePicker from 'expo-image-picker';
 import { Avatar } from 'react-native-elements/dist/avatar/Avatar';
+import { useSelector } from 'react-redux';
+import { selectAllUsers } from '../../slices/navSlice';
+
+
 
 
 export default function chatMembers(props) {
@@ -17,20 +21,14 @@ export default function chatMembers(props) {
 
  
 
-    const [userData, setUserData] = useState([])
+    const userData = useSelector(selectAllUsers)
     const [newchatName, setNewChatName] = useState(chatName)
+
+
 
     
 
-    useEffect(() => {
-        const unsubscribe = db.collection('users')
-        .onSnapshot((snapshot) => setUserData(snapshot.docs.map(doc => ({
-            uid: doc.id,
-            data: doc.data()
-        }))))    
-
-        return unsubscribe
-    }, [])
+    
 
     async function updateGroupPhoto(){
     

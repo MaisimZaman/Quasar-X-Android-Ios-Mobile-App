@@ -3,7 +3,11 @@ import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ScrollVi
 import firebase from 'firebase'
 import {auth, db } from '../../services/firebase'
 import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon, Container} from 'native-base'
+import { useSelector } from 'react-redux'
+import { selectAllUsers } from '../../slices/navSlice'
+
 var { height, width } = Dimensions.get('window');
+
 
 
 require('firebase/firestore');
@@ -13,6 +17,8 @@ export default function SearchScreen(props) {
     const [search, setSearch] = useState('')
     const [allPosts, setAllposts] = useState([])
     const [page, setPage] = useState(15);
+
+    const allTheUsers = useSelector(selectAllUsers)
     
 
     
@@ -27,14 +33,14 @@ export default function SearchScreen(props) {
                 async function addPostToState(item, index, arr){
                     //console.log(index)
                     await db.collection("posts")
-                    .doc(item.userId)
+                    .doc(item.uid)
                     .collection("userPosts")
                     .orderBy('creation', 'desc')
                     .onSnapshot((snapshot) => {
                         setAllposts(allPosts => [...allPosts].concat(
                             snapshot.docs.map(doc => ({
                                 id: doc.id,
-                                user: item.userInfo,
+                                user: item.data,
                                 data: doc.data()
 
                             }))
@@ -55,14 +61,12 @@ export default function SearchScreen(props) {
                 }
 
                 
+   
 
-                await db.collection("users")
-                .onSnapshot((snapshot) => exectuueOrder(snapshot.docs.map(doc => {
-                    return {userId: doc.data().uid, userInfo: doc.data()}
-                    
 
-                })))   
-                    
+                exectuueOrder(allTheUsers)
+                  
+            
             }
                 
             
@@ -187,11 +191,11 @@ export default function SearchScreen(props) {
 
         }
 
-        if (usersList.length < 15){
+        if (usersList.length < 10){
             var paginatedList = usersList
         }
         else {
-            var paginatedList = usersList.slice(0, page)
+            var paginatedList = usersList.slice(0, 10)
         }
 
         return (
@@ -199,7 +203,7 @@ export default function SearchScreen(props) {
             <FlatList
                 numColumns={1}
                 horizontal={false}
-                data={usersList}
+                data={paginatedList}
                 renderItem={({ item }) => (
                    renderPerson(item)
 

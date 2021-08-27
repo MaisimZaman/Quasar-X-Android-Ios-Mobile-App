@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Image } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
+import { ImageEditor } from 'expo-image-editor';
+
 
 
 export default function CammaraScreen({ navigation }) {
@@ -10,6 +12,15 @@ export default function CammaraScreen({ navigation }) {
   const [camera, setCamera] = useState(null);
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+
+  const [editorVisible, setEditorVisible] = useState(false);
+
+
+  useEffect(() => {
+    if (image != null){
+      setEditorVisible(true)
+    }
+  }, [image])
 
   useEffect(() => {
     (async () => {
@@ -35,9 +46,7 @@ export default function CammaraScreen({ navigation }) {
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1.9, 1],
-      quality: 1,
+      
     });
     console.log(result);
 
@@ -75,8 +84,22 @@ export default function CammaraScreen({ navigation }) {
       </Button>
       <Button title="Take Picture" onPress={() => takePicture()} />
       <Button title="Pick Image From Gallery" onPress={() => pickImage()} />
-      <Button title="Save" onPress={() => navigation.navigate("Save", {image})} />
-      {image && <Image source={{ uri: image }} style={{ flex: 1 }} />}
+      <ImageEditor
+        visible={editorVisible}
+        onCloseEditor={() => setEditorVisible(false)}
+        imageUri={image}
+        fixedCropAspectRatio={16 / 9}
+        lockAspectRatio={false}
+        minimumCropDimensions={{
+          width: 100,
+          height: 100,
+        }}
+        onEditingComplete={(result) => {
+          ///setImage(result);
+          navigation.navigate("Save", {result})
+        }}
+        mode="full"
+      />
     </View>
   );
 }

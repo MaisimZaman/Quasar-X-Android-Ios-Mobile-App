@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect} from 'react'
+import React, {useState, useLayoutEffect, useEffect} from 'react'
 import { View, TouchableOpacity, StyleSheet,SafeAreaView } from 'react-native'
 import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon } from 'native-base'
 import { auth, db } from "../../services/firebase";
@@ -20,7 +20,7 @@ export default function CommentsPage(props) {
 
     const [comments, setComments] = useState([]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const unsubscribe = db.collection('comments')
                 .doc(postId).collection('postComments')
                 .orderBy('timestamp')

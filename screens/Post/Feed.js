@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native'
+import React, {useState, useEffect, useLayoutEffect} from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, TextInput} from 'react-native'
 import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body } from 'native-base'
 import PostCard from '../../components/PostCard'
 import { auth, db } from '../../services/firebase'
 import { ScrollView } from 'react-native-gesture-handler'
 import Stories from '../../components/Stories'
+import Story from 'react-native-story'
 
 
 
@@ -15,10 +16,28 @@ export default function Feed({ navigation }) {
     const [userInfo, setUserInfo] = useState([])
     const [scrollEnd, setScrollEnd] = useState(false);
     const [page, setPage] = useState(5)
+    const [storyOn, setStoryOn] = useState(false)
 
     
 
     const postsFor = auth.currentUser.uid;
+
+    
+
+
+    useLayoutEffect(() => {
+        if (storyOn){
+            navigation.setOptions({
+                headerTransparent: true,
+            })
+
+        }
+        
+
+    }, [storyOn])
+
+
+
 
     useEffect(() => {    
 
@@ -211,13 +230,17 @@ export default function Feed({ navigation }) {
     return (
         
             <Container style={styles.container}>
-                    <Stories
-                    userFollowing={userFollowing}
-                    navigation={navigation}
-                    />
-    
-                    {renderPosts()}
+                    
+                    <Stories 
+                        navigation={navigation}
+                        userFollowing={userFollowing}
                 
+                    />
+                    
+
+                    <View style={{top: -8}}>
+                        {renderPosts()}
+                    </View>
                 
                 
             </Container>
@@ -232,7 +255,9 @@ export default function Feed({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        top: -40
+        
 
     }
 })

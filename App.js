@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 
 import 'react-native-gesture-handler';
@@ -32,6 +32,11 @@ import AddMore from './screens/Chat/AddMore';
 import VideoExplore from './screens/Video/VideoExplore';
 import ChatImageDetail from './screens/Chat/ChatImageDetail';
 import SendPostMessageScreen from './screens/Chat/SendPostMessageScreen';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { setAllUsers } from './slices/navSlice';
+import { useDispatch } from 'react-redux';
 import { Icon } from 'native-base';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['Setting a timer for a long period of time'])
@@ -46,99 +51,108 @@ var globalScreenOptions = {
 
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={globalScreenOptions}>
-        
-        <Stack.Screen name="Login" component={LoginScreen} ></Stack.Screen>
-        <Stack.Screen name="Register" component={RegisterScreen}></Stack.Screen>
-        <Stack.Screen name="Main" component={MainScreen} options={({ navigation }) => ({
-        title: "Quasar X",
 
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
-          <Image style={{ paddingLeft: 20, width: 25, height: 25 }} source={{uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcXrDYIdCrdQoXJZCETkOEUsuKoAo-DfJ14A&usqp=CAU"}} />
-          </TouchableOpacity>
-
-        ),
   
-        headerRight: () => ( 
+
+  return (
+    <Provider store={store}>
+      <NavigationContainer>
+        <SafeAreaProvider>
+          <Stack.Navigator screenOptions={globalScreenOptions}>
+            
+            <Stack.Screen name="Login" component={LoginScreen} ></Stack.Screen>
+            <Stack.Screen name="Register" component={RegisterScreen}></Stack.Screen>
+            <Stack.Screen name="Main" component={MainScreen} options={({ navigation }) => ({
+            title: "Quasar X",
+            headerTransparent: false,
+
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.navigate("Notifications")}>
+              <Image style={{ paddingLeft: 20, width: 25, height: 25 }} source={{uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcXrDYIdCrdQoXJZCETkOEUsuKoAo-DfJ14A&usqp=CAU"}} />
+              </TouchableOpacity>
+
+            ),
+      
+            headerRight: () => ( 
+            
+              <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+              <Icon style={{ paddingRight: 10 }} name="ios-send-outline" />
+              </TouchableOpacity>
+            
+            
+            ),
+
+          })}></Stack.Screen>
+            <Stack.Screen name="Home" component={HomeScreen}></Stack.Screen>
+            <Stack.Screen name="AddChat" component={AddChat}></Stack.Screen>
+            <Stack.Screen name="Chat" component={ChatScreen}></Stack.Screen>
+            <Stack.Screen name="Cammara" component={CammaraScreen} options={({ navigation }) => ({
+              title: 'Post Something',
+              headerTintColor: '#ffffff',
+              headerTransparent: true,
+          })}></Stack.Screen>
+            <Stack.Screen name="Save" component={Save}></Stack.Screen>
+            <Stack.Screen name="Profile" component={Profile}></Stack.Screen>
+            <Stack.Screen name="Chat-Image" component={ChatImageDetail} options={{headerTransparent: true}}></Stack.Screen>
+            <Stack.Screen name="Following-Page" component={followingScreen}></Stack.Screen>
+            <Stack.Screen name="Edit-Profile" component={EditProfile}></Stack.Screen>
+            <Stack.Screen name="Update-Profile-Pic" component={UpdateProfilePic}></Stack.Screen>
+            <Stack.Screen name="Post-Detail" component={PostDetail}></Stack.Screen>
+            <Stack.Screen name="Share-Post" component={SendPostMessageScreen}></Stack.Screen>
+            <Stack.Screen name="Comments" component={CommentsPage}></Stack.Screen>
+            <Stack.Screen name="Video-Comments" component={VideoComments}></Stack.Screen>
+            <Stack.Screen name="Story-Screen" component={StoryScreen} options={{headerTransparent: true}}></Stack.Screen>
+            <Stack.Screen name="Chat-Members" component={chatMembers}></Stack.Screen>
+            <Stack.Screen name="Videos" component={VideoScreen} options={({ navigation }) => ({
+              title: 'Reels',
+              headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate("Add-Video")}>
+                  <Icon name="ios-camera-outline" style={{ paddingLeft: 10 }} />
+                </TouchableOpacity> 
+                ),  
+              headerTintColor: '#ffffff',
         
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Icon style={{ paddingRight: 10 }} name="ios-send-outline" />
-          </TouchableOpacity>
-         
-        
-        ),
+              headerTransparent: true,
+          })}></Stack.Screen>
+            <Stack.Screen name="Add-Video" component={AddVideo}></Stack.Screen>
+            <Stack.Screen name="Save-Video" component={SaveVideo}></Stack.Screen>
+            <Stack.Screen name="Add-More" component={AddMore}></Stack.Screen>
+            <Stack.Screen name="Record-Video" component={RecVideo} options={({ navigation }) => ({
+              title: 'Record',
 
-      })}></Stack.Screen>
-        <Stack.Screen name="Home" component={HomeScreen}></Stack.Screen>
-        <Stack.Screen name="AddChat" component={AddChat}></Stack.Screen>
-        <Stack.Screen name="Chat" component={ChatScreen}></Stack.Screen>
-        <Stack.Screen name="Cammara" component={CammaraScreen} options={({ navigation }) => ({
-          title: 'Post Something',
-          headerTintColor: '#ffffff',
-          headerTransparent: true,
-      })}></Stack.Screen>
-        <Stack.Screen name="Save" component={Save}></Stack.Screen>
-        <Stack.Screen name="Profile" component={Profile}></Stack.Screen>
-        <Stack.Screen name="Chat-Image" component={ChatImageDetail} options={{headerTransparent: true}}></Stack.Screen>
-        <Stack.Screen name="Following-Page" component={followingScreen}></Stack.Screen>
-        <Stack.Screen name="Edit-Profile" component={EditProfile}></Stack.Screen>
-        <Stack.Screen name="Update-Profile-Pic" component={UpdateProfilePic}></Stack.Screen>
-        <Stack.Screen name="Post-Detail" component={PostDetail}></Stack.Screen>
-        <Stack.Screen name="Share-Post" component={SendPostMessageScreen}></Stack.Screen>
-        <Stack.Screen name="Comments" component={CommentsPage}></Stack.Screen>
-        <Stack.Screen name="Video-Comments" component={VideoComments}></Stack.Screen>
-        <Stack.Screen name="Story-Screen" component={StoryScreen}></Stack.Screen>
-        <Stack.Screen name="Chat-Members" component={chatMembers}></Stack.Screen>
-        <Stack.Screen name="Videos" component={VideoScreen} options={({ navigation }) => ({
-          title: 'Reels',
-          headerRight: () => (
-            <TouchableOpacity onPress={() => navigation.navigate("Add-Video")}>
-              <Icon name="ios-camera-outline" style={{ paddingLeft: 10 }} />
-            </TouchableOpacity> 
-            ),  
-          headerTintColor: '#ffffff',
-    
-          headerTransparent: true,
-      })}></Stack.Screen>
-        <Stack.Screen name="Add-Video" component={AddVideo}></Stack.Screen>
-        <Stack.Screen name="Save-Video" component={SaveVideo}></Stack.Screen>
-        <Stack.Screen name="Add-More" component={AddMore}></Stack.Screen>
-        <Stack.Screen name="Record-Video" component={RecVideo} options={({ navigation }) => ({
-          title: 'Record',
+          })}></Stack.Screen>
+            <Stack.Screen name="My-Videos" component={MyVideoScreen} options={({ navigation }) => ({
+              title: 'Your Reels',
+              headerTintColor: '#ffffff',
+              headerRight: () => (
+              <TouchableOpacity onPress={() => navigation.navigate("Add-Video")}>
+                <Icon name="ios-camera-outline" style={{ paddingLeft: 10 }} />
+              </TouchableOpacity> 
+              ),
+              headerTransparent: true,
+          })}></Stack.Screen>
 
-      })}></Stack.Screen>
-        <Stack.Screen name="My-Videos" component={MyVideoScreen} options={({ navigation }) => ({
-          title: 'Your Reels',
-          headerTintColor: '#ffffff',
-          headerRight: () => (
-          <TouchableOpacity onPress={() => navigation.navigate("Add-Video")}>
-            <Icon name="ios-camera-outline" style={{ paddingLeft: 10 }} />
-          </TouchableOpacity> 
-          ),
-          headerTransparent: true,
-      })}></Stack.Screen>
+        <Stack.Screen name="Explore-Videos" component={VideoExplore} options={({ navigation }) => ({
+              title: 'Explore Reels',
+              headerTintColor: '#ffffff',
+              headerRight: () => (
+              <TouchableOpacity onPress={() => navigation.navigate("Add-Video")}>
+                <Icon name="ios-camera-outline" style={{ paddingLeft: 10 }} />
+              </TouchableOpacity> 
+              ),
+              headerTransparent: true,
+          })}></Stack.Screen>
+          <Stack.Screen name="Notifications" component={NotificationScreen} options={({ navigation }) => ({
+              title: 'Your Notifications',
+            
+          })}/>
+            
+          </Stack.Navigator>
+      
+        </SafeAreaProvider>
 
-    <Stack.Screen name="Explore-Videos" component={VideoExplore} options={({ navigation }) => ({
-          title: 'Explore Reels',
-          headerTintColor: '#ffffff',
-          headerRight: () => (
-          <TouchableOpacity onPress={() => navigation.navigate("Add-Video")}>
-            <Icon name="ios-camera-outline" style={{ paddingLeft: 10 }} />
-          </TouchableOpacity> 
-          ),
-          headerTransparent: true,
-      })}></Stack.Screen>
-      <Stack.Screen name="Notifications" component={NotificationScreen} options={({ navigation }) => ({
-          title: 'Your Notifications',
-         
-      })}/>
-        
-      </Stack.Navigator>
-
-    </NavigationContainer>
+      </NavigationContainer>
+    </Provider>
   );
 
 }

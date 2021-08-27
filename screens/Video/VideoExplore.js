@@ -8,6 +8,8 @@ import Header from '../../components/VideoComponents/Header'
 import Hero from '../../components/VideoComponents/Hero'
 import Tabs from '../../components/VideoComponents/Tabs'
 import { auth, db } from '../../services/firebase'
+import { useSelector } from 'react-redux'
+import { selectAllUsers } from '../../slices/navSlice'
 
 
 
@@ -20,6 +22,8 @@ export default function VideoExplore({ navigation }){
 
 	const [allVideos, setAllVideos] = useState([]);
 
+    const allTheUsers = useSelector(selectAllUsers)
+
     useEffect(() => {
 
         
@@ -28,13 +32,13 @@ export default function VideoExplore({ navigation }){
 
             async function addPostToState(item, index, arr){
                 await db.collection("videos")
-                .doc(item.userId)
+                .doc(item.uid)
                 .collection("userVideos")
                 .onSnapshot((snapshot) => {
                     setAllVideos(allVideos => [...allVideos].concat(
                         snapshot.docs.map(doc => ({
                             id: doc.id,
-                            user: item.userInfo,
+                            user: item.data,
                             data: doc.data()
 
                         }))
@@ -54,14 +58,11 @@ export default function VideoExplore({ navigation }){
     
             }
 
+            exectuueOrder(allTheUsers)
+
             
 
-            await db.collection("users")
-            .onSnapshot((snapshot) => exectuueOrder(snapshot.docs.map(doc => {
-                return {userId: doc.data().uid, userInfo: doc.data()}
-                
-
-            })))   
+              
                 
         }
             

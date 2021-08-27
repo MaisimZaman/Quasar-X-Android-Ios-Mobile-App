@@ -3,12 +3,29 @@ import { StyleSheet, View, Text, KeyboardAvoidingView} from 'react-native'
 import { Button, Input, Image } from 'react-native-elements'
 import { StatusBar } from 'expo-status-bar'
 import { auth } from '../../services/firebase'
+import { useDispatch } from 'react-redux'
+import { setAllUsers } from '../../slices/navSlice'
+import { db } from '../../services/firebase'
 
 
 export default function LoginScreen({ navigation }){
 
     const [email, setEmail]  = useState("");
     const [password, setPassword ] = useState("");
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+    db.collection('users')
+    .onSnapshot((snapshot) => dispatch(setAllUsers((snapshot.docs.map(doc => ({
+        uid: doc.id,
+        data: doc.data()
+    }))))))
+
+    
+
+
+  }, [])
 
  
     
@@ -25,6 +42,9 @@ export default function LoginScreen({ navigation }){
         return unsubscribe;
         
     }, [])
+
+
+    
     
 
     function signIn(){

@@ -4,6 +4,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { auth, db } from '../../services/firebase';
 import { CardItem, Left, Thumbnail, Body } from 'native-base';
 import { Text } from 'react-native-elements';
+import { useSelector } from 'react-redux';
+import { selectAllUsers } from '../../slices/navSlice';
 
 
 export default function followingScreen(props) {
@@ -13,6 +15,8 @@ export default function followingScreen(props) {
     const [userData, setUserData] = useState([])
 
     const {userId, userName} = props.route.params;
+
+    const allTheUsers = useSelector(selectAllUsers)
 
     useEffect(() => {
         const unsubscribe  = () => {
@@ -25,11 +29,7 @@ export default function followingScreen(props) {
                     data: doc.data()
             }))))
 
-            db.collection('users')
-            .onSnapshot((snapshot) => setUserData(snapshot.docs.map(doc => ({
-            uid: doc.id,
-            data: doc.data()
-            }))))
+            setUserData(allTheUsers)
     
     
         }

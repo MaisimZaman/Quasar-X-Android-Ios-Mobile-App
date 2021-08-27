@@ -1,13 +1,20 @@
-import React, {useEffect, useState} from 'react'
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import React, {useEffect, useState, useLayoutEffect} from 'react'
+import { StyleSheet, Text, View, ScrollView, TextInput } from 'react-native'
 import { Container, Content, Icon, Thumbnail, Header, Left, Right, Body } from 'native-base'
 import { auth, db } from '../services/firebase'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import Story from 'react-native-story'
+import { Button } from 'react-native-elements/dist/buttons/Button'
 
 export default function Stories({userFollowing, navigation}) {
 
     const [profiles, setProfiles] = useState([])
 
+
+
+    
+
+    
 
     
 
@@ -18,7 +25,12 @@ export default function Stories({userFollowing, navigation}) {
 
                 
                 db.collection("users").doc(data.userId).get().then((doc) => {
-                    var userInfo = {id: doc.id, data: doc.data()}
+                    var userInfo = {
+                                    id: doc.id, 
+                                    source: {uri:"https://i.pinimg.com/originals/9f/78/0c/9f780caa86235d71dcf456abb9cd4e5c.png" },
+                                    user: doc.data().displayName,
+                                    avatar: {uri: doc.data().photoURL},
+                                }
                     if (profiles.length < userFollowing.length){
     
                         setProfiles(profiles => [...profiles, userInfo])
@@ -57,6 +69,32 @@ export default function Stories({userFollowing, navigation}) {
             ))
         )
     }
+
+
+    return (
+    
+        <Story 
+            unPressedBorderColor="#e95950"
+            pressedBorderColor="#ebebeb"
+        
+            stories={profiles}
+            animationDuration={800}
+            footerComponent={
+
+                
+                <TextInput
+                    placeholder="Send message"
+                    placeholderTextColor="white"
+                    //style={styles.footerInput}
+                />
+              
+            }
+
+        ></Story>
+        
+    )
+
+   
 
 
 
