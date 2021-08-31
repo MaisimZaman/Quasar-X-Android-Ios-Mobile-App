@@ -125,7 +125,7 @@ class MainScreen extends Component {
             <Tab.Screen name="VideoPage" component={VideosScreen} listeners={({ navigation }) => ({
                     tabPress: event => {
                         event.preventDefault();
-                        navigation.navigate("Videos")
+                        navigation.navigate("Explore-Videos")
                     }})}  options={{
                         title: 'Reels',
                         tabBarIcon: ({size,focused,color}) => {

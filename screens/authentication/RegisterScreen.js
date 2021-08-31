@@ -1,8 +1,9 @@
 import React, {useState, useLayoutEffect} from 'react'
-import { View,  StyleSheet, KeyboardAvoidingView } from 'react-native'
+import { View,  StyleSheet, KeyboardAvoidingView, Linking, TouchableOpacity } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Button, Input, Text } from 'react-native-elements'
 import { auth, db } from '../../services/firebase'
+
 
 
 export default function RegisterScreen({ navigation }){
@@ -97,6 +98,9 @@ export default function RegisterScreen({ navigation }){
                 onPress={register}
                 
             ></Button>
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.termsfeed.com/live/a4cf5a26-3364-4417-8680-0df21cba42fc')}>
+                <Text>View Privacy Policy</Text>
+            </TouchableOpacity>
         </KeyboardAvoidingView>
     )
 }

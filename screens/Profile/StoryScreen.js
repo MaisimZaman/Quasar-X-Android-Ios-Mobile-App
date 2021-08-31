@@ -87,8 +87,8 @@ export default function StoryScreen(props) {
         {
           id: "3",
           source: {uri: "https://i.pinimg.com/originals/9f/78/0c/9f780caa86235d71dcf456abb9cd4e5c.png"},
-          user: "Cenk Gun",
-          avatar: {uri: auth.currentUser.photoURL}
+          user: "Space-X-Stories",
+          avatar: {uri: "https://www.spacex.com/static/images/share.jpg"}
         },
       ];
 

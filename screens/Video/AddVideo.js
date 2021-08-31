@@ -5,6 +5,10 @@ import * as ImagePicker from 'expo-image-picker';
 import VideoPlayer from '../../components/VideoComponents/VideoPlayer';
 
 
+
+
+
+
 export default function AddVideo({ navigation }) {
   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
 
@@ -66,9 +70,14 @@ export default function AddVideo({ navigation }) {
     <View style={{ flex: 1 }}>
 
       
+
+      
       <Button title="Pick Video From Gallery" onPress={() => pickVideo()} />
       <Button title="Record Video" onPress={() => navigation.navigate("Record-Video")} />
-      <Button title="Save" onPress={() => navigation.navigate("Save-Video", {video: video})} />
+      <Button title="Save" 
+      onPress={() => navigation.navigate("Save-Video", {video: video})} 
+     
+      />
       {videoLogic()}
     </View>
   );

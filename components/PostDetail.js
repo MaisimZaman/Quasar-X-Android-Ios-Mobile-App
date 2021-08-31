@@ -105,6 +105,12 @@ export default function PostDetail(props){
                 </TouchableOpacity>
             )
         }
+        else {
+            <TouchableOpacity>
+                <Avatar source={{uri: "https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-glyph-1/32/-_Dot-More-Vertical-Menu-512.png"}} style={{ color: 'black', width: 25, height: 25 }} />
+            </TouchableOpacity>
+
+        }
     }
 
     //navigation.navigate("Profile", {currentUser: PosterId})
