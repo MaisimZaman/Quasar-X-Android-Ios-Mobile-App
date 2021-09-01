@@ -24,7 +24,6 @@ import followingScreen from './screens/Profile/followingScreen';
 import StoryScreen from './screens/Profile/StoryScreen';
 import SaveVideo from './screens/Video/SaveVideo';
 import MyVideoScreen from './screens/Video/MyVideos';
-import RecVideo from './screens/Video/RecVideo';
 import NotificationScreen from './screens/Profile/NotificationScreen';
 import VideoComments from './components/VideoComponents/VideoComments';
 import chatMembers from './screens/Chat/ChatMembers';
@@ -114,13 +113,12 @@ export default function App() {
         
               headerTransparent: true,
           })}></Stack.Screen>
-            <Stack.Screen name="Add-Video" component={AddVideo}></Stack.Screen>
-            <Stack.Screen name="Save-Video" component={SaveVideo}></Stack.Screen>
-            <Stack.Screen name="Add-More" component={AddMore}></Stack.Screen>
-            <Stack.Screen name="Record-Video" component={RecVideo} options={({ navigation }) => ({
-              title: 'Record',
+            <Stack.Screen name="Add-Video" component={AddVideo} options={({ navigation }) => ({
+              title: 'Record a Video',
 
           })}></Stack.Screen>
+            <Stack.Screen name="Save-Video" component={SaveVideo}></Stack.Screen>
+            <Stack.Screen name="Add-More" component={AddMore}></Stack.Screen>
             <Stack.Screen name="My-Videos" component={MyVideoScreen} options={({ navigation }) => ({
               title: 'Your Reels',
               headerTintColor: '#ffffff',

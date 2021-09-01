@@ -1,8 +1,10 @@
-import React, {useState, useLayoutEffect} from 'react'
-import { View,  StyleSheet, KeyboardAvoidingView, Linking, TouchableOpacity } from 'react-native'
+import React, {useState, useLayoutEffect, useEffect} from 'react'
+import { View,  StyleSheet, KeyboardAvoidingView, Linking, TouchableOpacity} from 'react-native'
 import { StatusBar } from 'expo-status-bar'
 import { Button, Input, Text } from 'react-native-elements'
 import { auth, db } from '../../services/firebase'
+import { CheckBox } from 'react-native-elements/dist/checkbox/CheckBox'
+
 
 
 
@@ -14,6 +16,11 @@ export default function RegisterScreen({ navigation }){
 
     const [password, setPassword] = useState('');
 
+    const [readyRegister, setReadyRegisted] = useState(false)
+
+    const [isSelected, setSelection] = useState(false);
+
+
 
 
 
@@ -22,6 +29,18 @@ export default function RegisterScreen({ navigation }){
             headerBackTitle: "Register your account"
         })
     }, [navigation])
+
+
+    useEffect(() => {
+        if (name != '' && email != '' && password != '' && isSelected == true){
+            setReadyRegisted(true)
+        }
+        else {
+            setReadyRegisted(false)
+        }
+
+
+    }, [name, email, password, isSelected])
 
     function register(){
         const defaultProfilePic = 'https://www.pphfoundation.ca/wp-content/uploads/2018/05/default-avatar-600x600.png'
@@ -91,16 +110,32 @@ export default function RegisterScreen({ navigation }){
 
             </View>
 
+            <View style={styles.checkboxContainer}>
+            <CheckBox
+                
+                iconRight
+                iconType='material'
+                checkedIcon='clear'
+                uncheckedIcon='add'
+                checkedColor='red'
+                checked={isSelected}
+                onPress={() => setSelection(!isSelected)}
+                />
+
+                <TouchableOpacity onPress={() => Linking.openURL('https://www.termsfeed.com/live/a4cf5a26-3364-4417-8680-0df21cba42fc')}>
+                    <Text style={styles.label}>Accept Privacy Policy</Text>
+                </TouchableOpacity>
+            </View>
+
             <Button
                 style={styles.button}
                 raised
                 title="Register"
                 onPress={register}
+                disabled={!readyRegister}
                 
             ></Button>
-            <TouchableOpacity onPress={() => Linking.openURL('https://www.termsfeed.com/live/a4cf5a26-3364-4417-8680-0df21cba42fc')}>
-                <Text>View Privacy Policy</Text>
-            </TouchableOpacity>
+            
         </KeyboardAvoidingView>
     )
 }
@@ -120,6 +155,18 @@ const styles = StyleSheet.create({
         width: 500,
         marginTop: 10,
     },
+    checkboxContainer: {
+        flexDirection: "row",
+        marginBottom: 20,
+      },
+      checkbox: {
+        alignSelf: "center",
+      },
+      label: {
+        margin: 0,
+        color: "#00BEEA",
+        top: 15
+      },
 
 
 })

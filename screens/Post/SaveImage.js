@@ -76,9 +76,9 @@ export default function Save(props) {
                 likesCount: 0,
                 creation: firebase.firestore.FieldValue.serverTimestamp()
             }).then((function () {
-                props.navigation.goBack()
+                props.navigation.replace("Main")
             }))
-        props.navigation.goBack()
+
     }
 
     
