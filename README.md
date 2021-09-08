@@ -1,8 +1,8 @@
 # Quasar-X-Android-Ios-Mobile-App
 
-Play Store Link: https://play.google.com/store/apps/details?id=quasarX.apk
+#Play Store Link: https://play.google.com/store/apps/details?id=quasarX.apk
 
-App Store Link: https://apps.apple.com/us/app/quasarx-social-media/id1582668591#?platform=iphone
+#App Store Link: https://apps.apple.com/us/app/quasarx-social-media/id1582668591#?platform=iphone
 
 
 Technolagies used: 
