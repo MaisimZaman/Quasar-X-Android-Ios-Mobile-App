@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, KeyboardAvoidingView} from 'react-native'
+import { StyleSheet, View, Text, KeyboardAvoidingView, TouchableOpacity, Linking} from 'react-native'
 import { Button, Input, Image } from 'react-native-elements'
 import { StatusBar } from 'expo-status-bar'
 import { auth } from '../../services/firebase'
@@ -86,6 +86,16 @@ export default function LoginScreen({ navigation }){
 
             <Button containerStyle={styles.button} onPress={signIn} title="Login"></Button>
             <Button containerStyle={styles.button} onPress={() => navigation.navigate("Register")} type="outline" title="Register"></Button>
+
+
+
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.app-privacy-policy.com/live.php?token=Jz17ZRAX2YI9ifsRSa69Nj4NzHnqE95d')}>
+                    <Text style={styles.label}>EULA</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => Linking.openURL('https://www.termsfeed.com/live/a4cf5a26-3364-4417-8680-0df21cba42fc')}>
+                    <Text style={styles.label2}>Privacy Policy</Text>
+            </TouchableOpacity>
             
         </KeyboardAvoidingView>
     )
@@ -113,6 +123,31 @@ const styles = StyleSheet.create({
         marginTop: 10,
 
     },
+    
+    inputContainer: {
+        width: 300,
+    },
+    checkboxContainer: {
+        flexDirection: "row",
+        marginBottom: 20,
+      },
+      checkbox: {
+        alignSelf: "center",
+      },
+      label: {
+        margin: 0,
+        color: "#00BEEA",
+        //top: 80,
+        //marginRight: 300
+        marginTop: 30
+      },
+
+      label2: {
+        margin: 0,
+        color: "#00BEEA",
+        //top: 60,
+        //marginRight: 100
+      },
 
 
 })

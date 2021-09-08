@@ -2,7 +2,7 @@
   "expo": {
     "name": "QuasarX-Mobile",
     "slug": "QuasarX-Mobile",
-    "version": "3.0.0",
+    "version": "8.0.0",
     "orientation": "portrait",
     "icon": "./services/assets/mainlogo.png",
     "splash": {
@@ -18,7 +18,12 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "quasarX.apk"
+      "bundleIdentifier": "quasarX.apk",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Quasar-X would like to use your Cammara for taking images and/or videos to upload them as your post or reels",
+        "NSMicrophoneUsageDescription": "Quasar-X would like to use your Microphone for recording reels with audio",
+        "NSPhotoLibraryUsageDescription": "Quasar-X would like to use your Photo Libary to upload images and/or videos from your device as a post or reel"
+      }
     },
     "android": {
       "adaptiveIcon": {

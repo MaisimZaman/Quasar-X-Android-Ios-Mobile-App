@@ -5,9 +5,13 @@ import {
     StyleSheet,
     Image,
     TouchableOpacity,
+    Modal,
+    Pressable,
+    
 } from "react-native";
 
 import { ListItem } from "react-native-elements/dist/list/ListItem";
+import { Avatar } from "react-native-elements/dist/avatar/Avatar";
 
 import { Card, CardItem, Thumbnail, Body, Left, Right, Button, Icon } from 'native-base'
 import { auth, db } from "../services/firebase";
@@ -22,6 +26,7 @@ export default function PostCard(props){
     const [likesCount, setLikes] = useState([]);
     const [inLikes, setInLikes ] = useState([]);
     const [removeLike, setRemoveLike ] = useState([])
+    const [modalVisible, setModalVisible] = useState(false);
 
 
     useEffect(() => {
@@ -94,11 +99,76 @@ export default function PostCard(props){
         }
     }
 
+    function loadDeleteButton(){
+        
+        return (
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Avatar source={{uri: "https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-glyph-1/32/-_Dot-More-Vertical-Menu-512.png"}} style={{ color: 'black', width: 25, height: 25 }} />
+            </TouchableOpacity>
+        )
+    
+    
+            
+
+        
+    }
+
+    function modalPressLogic(){
+        if (auth.currentUser.uid == PosterId){
+            db.collection("posts")
+                  .doc(PosterId)
+                  .collection("userPosts")
+                  .doc(id)
+                  .delete()
+
+                  
+            props.navigation.goBack()
+        }
+
+        else {
+            setModalVisible(false)
+            props.navigation.navigate("Report This Post", {postId: id})
+        }
+    }
+
+    function renderModal(){
+        return (
+            <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>{ auth.currentUser.uid === PosterId ? "Would you like to delete this post?" : "Do you want to report this post? "}</Text>
+            <Pressable
+              style={[styles.button, styles.buttonDelete]}
+              onPress={modalPressLogic}
+            >
+              <Text style={styles.textStyle}>{auth.currentUser.uid === PosterId ? "Delete" : "Report"}</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Cancel</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+        )
+    }
+
     
 
 
     return (
-        
+        <View>
+            {renderModal()}
             <Card>
             <CardItem>
             <Left>
@@ -115,6 +185,11 @@ export default function PostCard(props){
                     <Text note>.</Text>
                 </Body>
             </Left>
+            <Right>
+                
+                {loadDeleteButton()}
+                
+            </Right>
         </CardItem>
         <CardItem cardBody>
             <Image source={{uri: image}} style={{ height: 300, width: null, flex: 1 }} />
@@ -163,6 +238,8 @@ export default function PostCard(props){
         </CardItem>
     </Card>
 
+    </View>
+
          
 
     )
@@ -173,5 +250,49 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
+      button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+      },
+      buttonOpen: {
+        backgroundColor: "#F194FF",
+      },
+      buttonClose: {
+        backgroundColor: "#2196F3",
+      },
+      buttonDelete: {
+        backgroundColor: "#FF0000",
+      },
+      textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+      },
+      modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+      }
 });

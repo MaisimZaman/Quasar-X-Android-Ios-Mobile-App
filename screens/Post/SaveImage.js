@@ -76,7 +76,7 @@ export default function Save(props) {
                 likesCount: 0,
                 creation: firebase.firestore.FieldValue.serverTimestamp()
             }).then((function () {
-                props.navigation.replace("Main")
+                props.route.params.navigation.navigate("ProfileScreen")
             }))
 
     }
@@ -91,12 +91,10 @@ export default function Save(props) {
 				style={{ color: "black", fontSize: 22 }}
 				multiline={true}
 				autoFocus
-				selectionColor="#fff"
+				selectionColor="black"
 			/>
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.bottom}>
-				<Button title="Post" style={styles.button} appearance="filled" onPress={() => uploadImage(false)}>
-				</Button>
-                <Button title="Set as Story" style={styles.button} appearance="filled" onPress={() => uploadImage(true)}>
+				<Button title="Post Image" style={styles.button} appearance="filled" onPress={() => uploadImage(false)}>
 				</Button>
 			</KeyboardAvoidingView>
 		</View>

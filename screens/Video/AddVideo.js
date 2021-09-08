@@ -7,17 +7,21 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
-  Image
+  Image,
+  Modal,
+  Pressable
 } from "react-native";
 import { Camera } from "expo-camera";
 import { Video } from "expo-av";
 import { Audio } from "expo-av";
 import { Button } from "react-native";
-import { ImageEditor } from 'expo-image-editor';
 import * as ImagePicker from 'expo-image-picker';
+import { auth, db } from "../../services/firebase";
+
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 const closeButtonSize = Math.floor(WINDOW_HEIGHT * 0.032);
 const captureSize = Math.floor(WINDOW_HEIGHT * 0.09);
+
 
 
 export default function AddVideo({ navigation }) {
@@ -28,19 +32,29 @@ export default function AddVideo({ navigation }) {
   const [isCameraReady, setIsCameraReady] = useState(false);
   const [isVideoRecording, setIsVideoRecording] = useState(false);
   const [videoSource, setVideoSource] = useState(null);
+
  
-  
+
+  const cameraRef = useRef();
+
+
 
   
-  const cameraRef = useRef();
+
+
   useEffect(() => {
     (async () => {
+
+     
+
+      
       const { status } = await Camera.requestPermissionsAsync();
       await Audio.requestPermissionsAsync();
       setHasPermission(status === "granted");
 
-      const {status2 } = await ImagePicker.requestCameraRollPermissionsAsync();
+      const {status2 } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       setHasGalleryPermission(status2 === "granted")
+    
       
 
 
@@ -119,7 +133,7 @@ export default function AddVideo({ navigation }) {
   };
 
   const goBackToOrig = async () => {
-      await navigation.navigate("Save-Video", {video: videoSource})
+      await navigation.navigate("Save-Video", {video: videoSource, navigation: navigation})
   }
 
   
@@ -185,10 +199,9 @@ export default function AddVideo({ navigation }) {
     </View>
   );
 
+  
 
-  if (hasPermission === null) {
-    return <View />;
-  }
+
   if (hasPermission === false) {
     return <Text style={styles.text}>No access to camera</Text>;
   }
@@ -293,6 +306,50 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#fff",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  buttonDelete: {
+    backgroundColor: "#FF0000",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
   },
 });
 

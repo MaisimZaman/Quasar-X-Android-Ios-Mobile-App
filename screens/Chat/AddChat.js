@@ -132,10 +132,14 @@ export default function AddChat({ navigation }) {
 
             <Button disabled={input==''} title="Create New Chat" onPress={createChat}></Button>
 
+            <View>
             <TextInput
                     style={styles.textInput}
-                    placeholder="Seach for User..."
+                    placeholder="Search for User..."
                     onChangeText={(searchUsers) => setSearchUsers(searchUsers)} />
+                
+            </View>
+        
 
 
             <FlatList
@@ -160,12 +164,12 @@ const styles = StyleSheet.create({
 
     },
     textInput: {
+        color: "black", 
+        fontSize: 15,
         bottom: -20,
-        flex: 1,
         marginRight: 15,
         backgroundColor: "#ECECEC",
-        padding:25,
-        color: "grey",
+        padding:15,
         borderRadius: 30,
 
     },

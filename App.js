@@ -31,6 +31,7 @@ import AddMore from './screens/Chat/AddMore';
 import VideoExplore from './screens/Video/VideoExplore';
 import ChatImageDetail from './screens/Chat/ChatImageDetail';
 import SendPostMessageScreen from './screens/Chat/SendPostMessageScreen';
+import ReportPost from './screens/Post/ReportPost';
 import { Provider } from 'react-redux';
 import { store } from './store';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -58,7 +59,7 @@ export default function App() {
       <NavigationContainer>
         <SafeAreaProvider>
           <Stack.Navigator screenOptions={globalScreenOptions}>
-            
+         
             <Stack.Screen name="Login" component={LoginScreen} ></Stack.Screen>
             <Stack.Screen name="Register" component={RegisterScreen}></Stack.Screen>
             <Stack.Screen name="Main" component={MainScreen} options={({ navigation }) => ({
@@ -85,6 +86,7 @@ export default function App() {
             <Stack.Screen name="Home" component={HomeScreen}></Stack.Screen>
             <Stack.Screen name="AddChat" component={AddChat}></Stack.Screen>
             <Stack.Screen name="Chat" component={ChatScreen}></Stack.Screen>
+            <Stack.Screen name="Report This Post" component={ReportPost}></Stack.Screen>
             <Stack.Screen name="Cammara" component={CammaraScreen} options={({ navigation }) => ({
               title: 'Post Something',
               headerTintColor: '#ffffff',

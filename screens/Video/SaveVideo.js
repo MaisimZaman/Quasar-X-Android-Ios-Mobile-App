@@ -66,7 +66,7 @@ export default function SaveVideo(props) {
                 likesCount: 0,
                 creation: firebase.firestore.FieldValue.serverTimestamp()
             }).then((()  => {
-                props.navigation.replace("My-Videos")
+                props.route.params.navigation.replace("My-Videos")
             }))
     }
 
@@ -81,7 +81,7 @@ export default function SaveVideo(props) {
 				style={{ color: "black", fontSize: 22 }}
 				multiline={true}
 				autoFocus
-				selectionColor="#fff"
+				selectionColor="black"
 			/>
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.bottom}>
 				<Button title="Post Reel" style={styles.button} appearance="filled" onPress={uploadVideo}>

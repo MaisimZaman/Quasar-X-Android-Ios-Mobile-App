@@ -122,8 +122,8 @@ export default function RegisterScreen({ navigation }){
                 onPress={() => setSelection(!isSelected)}
                 />
 
-                <TouchableOpacity onPress={() => Linking.openURL('https://www.termsfeed.com/live/a4cf5a26-3364-4417-8680-0df21cba42fc')}>
-                    <Text style={styles.label}>Accept Privacy Policy</Text>
+                <TouchableOpacity onPress={() => Linking.openURL('https://www.app-privacy-policy.com/live.php?token=Jz17ZRAX2YI9ifsRSa69Nj4NzHnqE95d')}>
+                    <Text style={styles.label}>Accept EULA</Text>
                 </TouchableOpacity>
             </View>
 

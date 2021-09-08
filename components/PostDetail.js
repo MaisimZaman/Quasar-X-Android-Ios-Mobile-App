@@ -98,22 +98,36 @@ export default function PostDetail(props){
     }
 
     function loadDeleteButton(){
-        if (auth.currentUser.uid = PosterId){
-            return (
-                <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Avatar source={{uri: "https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-glyph-1/32/-_Dot-More-Vertical-Menu-512.png"}} style={{ color: 'black', width: 25, height: 25 }} />
-                </TouchableOpacity>
-            )
-        }
-        else {
-            <TouchableOpacity>
-                <Avatar source={{uri: "https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-glyph-1/32/-_Dot-More-Vertical-Menu-512.png"}} style={{ color: 'black', width: 25, height: 25 }} />
+        
+        return (
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <Avatar source={{uri: "https://cdn1.iconfinder.com/data/icons/jumpicon-basic-ui-glyph-1/32/-_Dot-More-Vertical-Menu-512.png"}} style={{ color: 'black', width: 25, height: 25 }} />
             </TouchableOpacity>
+        )
+    
+    
+            
 
-        }
+        
     }
 
-    //navigation.navigate("Profile", {currentUser: PosterId})
+    function modalPressLogic(){
+        if (auth.currentUser.uid == PosterId){
+            db.collection("posts")
+                  .doc(PosterId)
+                  .collection("userPosts")
+                  .doc(id)
+                  .delete()
+
+                  
+            props.navigation.goBack()
+        }
+
+        else {
+            setModalVisible(false)
+            props.navigation.navigate("Report This Post", {postId: id})
+        }
+    }
     return (
         <View>
             <Modal
@@ -127,21 +141,12 @@ export default function PostDetail(props){
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Would you like to delete this post? </Text>
+            <Text style={styles.modalText}>{ auth.currentUser.uid === PosterId ? "Would you like to delete this post?" : "Do you want to report this post? "}</Text>
             <Pressable
               style={[styles.button, styles.buttonDelete]}
-              onPress={() => {
-                  db.collection("posts")
-                  .doc(PosterId)
-                  .collection("userPosts")
-                  .doc(id)
-                  .delete()
-
-                  //navigation.navigate("Profile", {currentUser: auth.currentUser})
-                  props.navigation.goBack()
-              }}
+              onPress={modalPressLogic}
             >
-              <Text style={styles.textStyle}>Delete</Text>
+              <Text style={styles.textStyle}>{auth.currentUser.uid === PosterId ? "Delete" : "Report"}</Text>
             </Pressable>
             <Pressable
               style={[styles.button, styles.buttonClose]}

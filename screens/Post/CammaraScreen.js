@@ -7,7 +7,9 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
-  Image
+  Image,
+  Modal,
+  Pressable
 } from "react-native";
 import { Camera } from "expo-camera";
 import { Video } from "expo-av";
@@ -15,9 +17,12 @@ import { Audio } from "expo-av";
 import { Button } from "react-native";
 import { ImageEditor } from 'expo-image-editor';
 import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
+import { auth, db } from "../../services/firebase";
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 const closeButtonSize = Math.floor(WINDOW_HEIGHT * 0.032);
 const captureSize = Math.floor(WINDOW_HEIGHT * 0.09);
+
 
 
 export default function CammaraScreen({ navigation }) {
@@ -31,20 +36,32 @@ export default function CammaraScreen({ navigation }) {
   const [image, setImage] = useState(null)
   const [editorVisible, setEditorVisible] = useState(false)
   
+  
 
   
   const cameraRef = useRef();
+
+  
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      await Audio.requestPermissionsAsync();
-      setHasPermission(status === "granted");
 
-      const {status2 } = await ImagePicker.requestCameraRollPermissionsAsync();
-      setHasGalleryPermission(status2 === "granted")
+      
+   
+      
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+      await Audio.requestPermissionsAsync();
+      
       
 
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+        
 
+       
+
+
+      
+      
       
     })();
   }, []);
@@ -132,7 +149,7 @@ export default function CammaraScreen({ navigation }) {
   };
 
   const goBackToOrig = async () => {
-      await navigation.navigate("Save-Video", {video: videoSource})
+      await navigation.navigate("Save-Video", {video: videoSource, navigation: navigation})
   }
 
   
@@ -207,10 +224,7 @@ export default function CammaraScreen({ navigation }) {
     </View>
   );
 
-
-  if (hasPermission === null) {
-    return <View />;
-  }
+  
   if (hasPermission === false) {
     return <Text style={styles.text}>No access to camera</Text>;
   }
@@ -246,7 +260,7 @@ export default function CammaraScreen({ navigation }) {
         }}
         onEditingComplete={(result) => {
           ///setImage(result);
-          navigation.navigate("Save", {image: result.uri})
+          navigation.navigate("Save", {image: result.uri, navigation: navigation})
         }}
         mode="full"
       />
@@ -321,6 +335,50 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#fff",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  buttonDelete: {
+    backgroundColor: "#FF0000",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
   },
 });
 

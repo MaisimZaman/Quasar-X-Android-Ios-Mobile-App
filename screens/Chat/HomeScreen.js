@@ -172,14 +172,15 @@ export default function HomeScreen({ navigation }) {
         });
     }, [navigation])
 
-    function enterChat(id, chatName, photo, isDm, members, admin){
+    function enterChat(id, chatName, photo, isDm, members, admin, otherUser){
         navigation.navigate("Chat", {
             id: id,
             chatName: chatName,
             photo: photo,
             isDm: isDm,
             members: members,
-            admin: admin
+            admin: admin,
+            otherUser: otherUser
 
         })
     }
@@ -206,6 +207,7 @@ export default function HomeScreen({ navigation }) {
                     photo={getphotoUrl(otherUser)} 
                     userName={getDisplayName(otherUser)} 
                     isDM={true}
+                    otherUser={otherUser}
                     members={[auth.currentUser.uid, otherUser]}
                     admin={auth.currentUser.uid}
                     />

@@ -1,5 +1,6 @@
-import React, {useLayoutEffect, useState} from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Image } from 'react-native'
+import React, {useLayoutEffect, useState, useEffect} from 'react'
+import { View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Image } from 'react-native'
+import { Text } from 'react-native-elements'
 import { Avatar } from 'react-native-elements'
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons'
 import { SafeAreaView } from 'react-native'
@@ -17,11 +18,38 @@ import TextPostCard from '../../components/TextPostCard'
 
 export default function ChatScreen({ navigation, route}) {
 
-    const {chatName, id, photo, isDm, members, admin} = route.params
+    const {chatName, id, photo, isDm, members, admin, otherUser} = route.params
 
     const [input, setInput] = useState("")
 
     const [messages, setMessages] = useState([])
+
+  
+
+    const [isblocked, setIsBlocked] = useState(false)
+
+    useEffect(() => {
+
+        if (isDm){
+           
+            db.collection('blockLists')
+            .doc(auth.currentUser.uid)
+            .collection('userBlocked')
+            .doc(otherUser)
+            .get().then((doc) => {
+                if (doc.exists){
+                    setIsBlocked(true)
+    
+                }
+                else {
+                    setIsBlocked(false)
+                }
+            })
+
+        }
+       
+
+    }, [isblocked])
 
 
 
@@ -267,6 +295,40 @@ export default function ChatScreen({ navigation, route}) {
         }
     }
 
+    function renderFooter(){
+        if (isblocked){
+            return (
+                <Text h4>You will not be able to message eachother since you have blocked this user</Text>
+            )
+        }
+
+        else {
+            return (
+                <>
+                <TouchableOpacity onPress={sendPictureImage}>
+                            <Avatar source={{uri: "https://static.thenounproject.com/png/17840-200.png"}} style={{width: 35, height: 35}} />
+                        </TouchableOpacity>
+                        <TextInput 
+                        value={input}
+                        onChangeText={(text) => setInput(text)}
+                        onSubmitEditing={sendMessage}
+                        placeholder="Message.." 
+                        style={styles.textInput}
+                        
+                        ></TextInput>
+
+                        <TouchableOpacity 
+                        disabled={input == ""}
+                        onPress={sendMessage}
+                        >
+                            <Ionicons name="send" size={24}  color="#2b68E6"></Ionicons>
+
+                </TouchableOpacity>
+                </>
+            )
+        }
+    }
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white"}}>
             <StatusBar style="light"></StatusBar>
@@ -296,26 +358,7 @@ export default function ChatScreen({ navigation, route}) {
                     </ScrollView>
 
                     <View style={styles.footer}>
-                        <TouchableOpacity onPress={sendPictureImage}>
-                            <Avatar source={{uri: "https://static.thenounproject.com/png/17840-200.png"}} style={{width: 35, height: 35}} />
-                        </TouchableOpacity>
-                        <TextInput 
-                        value={input}
-                        onChangeText={(text) => setInput(text)}
-                        onSubmitEditing={sendMessage}
-                        placeholder="Message.." 
-                        style={styles.textInput}
-                        
-                        ></TextInput>
-
-                        <TouchableOpacity 
-                        disabled={input == ""}
-                        onPress={sendMessage}
-                        >
-                            <Ionicons name="send" size={24}  color="#2b68E6"></Ionicons>
-
-                        </TouchableOpacity>
-
+                        {renderFooter()}
                     </View>
                 </>
                 
