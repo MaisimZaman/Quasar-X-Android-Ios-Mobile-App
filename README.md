@@ -1,6 +1,8 @@
 # Quasar-X-Android-Ios-Mobile-App
 
-#Still in the works for development soon to be launched on Play Store and IOS App store
+Play Store Link: https://play.google.com/store/apps/details?id=quasarX.apk
+
+App Store Link: https://apps.apple.com/us/app/quasarx-social-media/id1582668591#?platform=iphone
 
 
 Technolagies used: 
